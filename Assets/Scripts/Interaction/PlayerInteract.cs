@@ -28,7 +28,7 @@ public class PlayerInteract : MonoBehaviour
                 // Check for Carriage interaction
                 if (collider.TryGetComponent(out CarriageInteractable carriageInteractable))
                 {
-                    carriageInteractable.Interact();
+                    carriageInteractable.OnMouseDown();
                     break; // Exit the loop after interacting with the first valid Carriage
                 }
 
