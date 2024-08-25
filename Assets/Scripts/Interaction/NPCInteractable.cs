@@ -9,6 +9,8 @@ public class NPCInteractable : MonoBehaviour
     [SerializeField] private ChatBubble.IconType chatBubbleIcon = ChatBubble.IconType.Happy; // Default icon type
     [SerializeField] private string npcDialogue1;
     [SerializeField] private string npcDialogue2;
+    [SerializeField] private string npcDialogue3;
+
     [SerializeField] private float delayBeforeSecondDialogue = 4f;
 
     public void Interact()
@@ -31,6 +33,12 @@ public class NPCInteractable : MonoBehaviour
         // Show the second chat bubble
         ChatBubble.Create(transform, chatBubblePosition, chatBubbleIcon, npcDialogue2);
         message = "Dialogue = " + npcDialogue2;
+        Debug.Log(message);
+
+        yield return new WaitForSeconds(delayBeforeSecondDialogue);
+
+        ChatBubble.Create(transform, chatBubblePosition, chatBubbleIcon, npcDialogue3);
+        message = "Dialogue = " + npcDialogue3;
         Debug.Log(message);
     }
 
