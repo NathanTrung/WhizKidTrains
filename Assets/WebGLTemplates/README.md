@@ -14,4 +14,3 @@ WebGLTemplates > MyTemplate > etc...
 
 # Target Template for building
 Edit > Player > Resolution & Presentation > Target Template
-![PlayerSettings]([image_url_or_path](https://docs.unity3d.com/uploads/Main/WebGLResolutionandPresentationWindow.png))
