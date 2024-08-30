@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Runtime.InteropServices;
 using UnityEngine.SceneManagement;
 
 public class Login : MonoBehaviour
@@ -12,6 +11,9 @@ public class Login : MonoBehaviour
     private TMP_InputField fPasswordInputField;
     [SerializeField]
     private TextMeshProUGUI fErrorText;
+
+    [DllImport("__Internal")]
+    public static extern void SignInWithEmailAndPassword(string email, string password);
 
     public void OnSubmitLogin()
     {
@@ -52,7 +54,7 @@ public class Login : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        SignInWithEmailAndPassword("old@gmail.com", "123456789");
     }
 
     // Update is called once per frame

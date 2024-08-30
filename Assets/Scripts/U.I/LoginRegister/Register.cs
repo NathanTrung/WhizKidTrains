@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -14,6 +13,10 @@ public class Register : MonoBehaviour
     private TMP_InputField fUsernameInputField;
     [SerializeField]
     private TextMeshProUGUI fErrorText;
+
+    // Firebase Auth JSCalls
+    [DllImport("__Internal")]
+    public static extern void CreateUserWithEmailAndPassword(string email, string password);
 
     public void OnSubmitRegister()
     {
@@ -55,7 +58,7 @@ public class Register : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        CreateUserWithEmailAndPassword("new@gmail.com", "987654321");
     }
 
     // Update is called once per frame
