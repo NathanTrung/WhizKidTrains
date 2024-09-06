@@ -12,11 +12,17 @@ public class TrainController : MonoBehaviour
     public Transform player;
     public Vector3 boardingOffset;
     public Collider boardingCollider;
+    public Camera mainCamera; // Reference to the main camera
+    public Vector3 cameraOffset; // Offset for the camera
+    private Vector4 playerCameraOffset = new Vector4(0.5910273f, 0.9778184f, -0.8691149f);
 
     private bool isPlayerOnTrain = false;
     private Queue<float> targetQueue = new Queue<float>();
     private float currentTargetPercent = 0f;
     private bool hasStartedMoving = false;
+
+    private Vector4 initialCameraPosition; // Store the initial camera position
+    private Quaternion initialCameraRotation; // Store the initial camera rotation
 
     private void Start()
     {
@@ -36,6 +42,17 @@ public class TrainController : MonoBehaviour
             {
                 Debug.LogError("BoardingCollider component not found.");
             }
+        }
+
+        // Store the initial camera position and rotation
+        if (mainCamera != null)
+        {
+            initialCameraPosition = mainCamera.transform.position;
+            initialCameraRotation = mainCamera.transform.rotation;
+        }
+        else
+        {
+            Debug.LogError("Main Camera not assigned.");
         }
     }
 
@@ -90,8 +107,21 @@ public class TrainController : MonoBehaviour
         {
             Debug.Log("Attempting to board the train.");
             player.SetParent(transform);
-            player.localPosition = boardingOffset;
+            player.localPosition = boardingOffset; // Set to boarding offset
             player.localRotation = Quaternion.identity;
+
+            // Set the camera position to the desired offset
+            if (mainCamera != null)
+            {
+                Vector3 trainPosition = transform.position;
+
+                // Adjusting the camera's position relative to the train with the offset
+                Vector3 cameraPosition = trainPosition + cameraOffset;
+                mainCamera.transform.position = cameraPosition;
+
+                // Optionally: Make the camera look at the train
+                mainCamera.transform.LookAt(trainPosition);
+            }
 
             PlayerRideController playerController = player.GetComponent<PlayerRideController>();
             if (playerController != null)
@@ -125,6 +155,16 @@ public class TrainController : MonoBehaviour
             if (playerController != null)
             {
                 playerController.SetOnTrain(false);
+            }
+
+            // Restore the camera position and rotation
+            if (mainCamera != null)
+            {
+                // Reset camera position to the initial position
+                Vector4 playerCoord = new Vector4(player.position.x, player.position.y, -0.1f + 41f);
+
+                mainCamera.transform.position = playerCoord + playerCameraOffset;
+                mainCamera.transform.rotation = initialCameraRotation;
             }
 
             Debug.Log("Player exited the train and moved to: " + exitPosition);
@@ -211,12 +251,12 @@ public class TrainController : MonoBehaviour
         if (splineFollower != null)
         {
             float currentPercent = (float)splineFollower.GetPercent();
-            float nextPercent = currentPercent + (forwardIncrement / 100f); // Adjust speed
-            if (nextPercent > 1f)
+            float nextPercent = Mathf.Clamp(currentPercent + (forwardIncrement / 100f), 0f, 1f);
+
+            if (Mathf.Approximately(currentPercent, nextPercent))
             {
-                nextPercent = 1f; // Clamp to spline end
-                // Stop moving when reaching the end
-                isMoving = false;
+                isMoving = false; // Stop moving if we've reached or are very close to the target
+                return;
             }
 
             splineFollower.SetPercent(nextPercent);
