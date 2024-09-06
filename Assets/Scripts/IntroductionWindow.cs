@@ -14,7 +14,7 @@ public class IntroductionWindow : MonoBehaviour
     public bool isPaused;
     public static bool isPaused1;
     public GameObject pauseMenuObject;
-
+    public GameObject settingsMenuObject;
 
 
     private bool isWindowActive = true; // Track if the introduction panel is active
@@ -25,6 +25,7 @@ public class IntroductionWindow : MonoBehaviour
         if (introductionPanel != null)
         {
             introductionPanel.SetActive(true);
+            settingsMenuObject.SetActive(false);
         }
 
         if (pauseMenuObject != null)
