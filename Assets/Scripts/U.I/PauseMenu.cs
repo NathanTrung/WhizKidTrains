@@ -23,6 +23,9 @@ public class PauseMenu : MonoBehaviour
         // Initialize settings values if needed
         volumeSlider.onValueChanged.AddListener(SetVolume);
         qualityDropdown.onValueChanged.AddListener(SetQuality);
+
+        // Initialize dropdown with current quality level
+        qualityDropdown.value = QualitySettings.GetQualityLevel();
     }
 
     void Update()
