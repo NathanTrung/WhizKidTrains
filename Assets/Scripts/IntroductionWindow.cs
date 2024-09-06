@@ -13,6 +13,7 @@ public class IntroductionWindow : MonoBehaviour
     private SimpleSampleCharacterControl cameraController;
     public bool isPaused;
     public static bool isPaused1;
+    public GameObject pauseMenuObject;
 
 
 
@@ -24,6 +25,11 @@ public class IntroductionWindow : MonoBehaviour
         if (introductionPanel != null)
         {
             introductionPanel.SetActive(true);
+        }
+
+        if (pauseMenuObject != null)
+        {
+            pauseMenuObject.SetActive(false);
         }
 
         // Pause the game
@@ -55,7 +61,7 @@ public class IntroductionWindow : MonoBehaviour
     {
 
         // Check for any key press to dismiss the introduction window
-        if (isWindowActive && Input.GetKeyDown(KeyCode.Escape) || isWindowActive && Input.GetKeyDown(KeyCode.Space))
+        if (isWindowActive && Input.GetKeyDown(KeyCode.Return) || (isWindowActive && Input.GetKeyDown(KeyCode.KeypadEnter) || isWindowActive && Input.GetKeyDown(KeyCode.Space)))
         {
             OnOkButtonClick();
 
@@ -77,6 +83,12 @@ public class IntroductionWindow : MonoBehaviour
 
         Time.timeScale = 1f; // Resume the game
         Debug.Log("Game resumed. Time.timeScale set to 1.");
+
+        // Enable the PauseMenu once the introduction window is closed
+        if (pauseMenuObject != null)
+        {
+            pauseMenuObject.SetActive(true);
+        }
 
         // Update the flag to indicate the window is no longer active
         isWindowActive = false;
