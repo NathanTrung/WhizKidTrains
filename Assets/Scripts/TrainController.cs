@@ -13,16 +13,13 @@ public class TrainController : MonoBehaviour
     public Vector3 boardingOffset;
     public Collider boardingCollider;
     public Camera mainCamera; // Reference to the main camera
-    public Vector3 cameraOffset; // Offset for the camera
-    private Vector4 playerCameraOffset = new Vector4(0.5910273f, 0.9778184f, -0.8691149f);
+    public float onTrainFOV = 10f; // FOV when on the train
+    public float offTrainFOV = 50f; // FOV when off the train
 
     private bool isPlayerOnTrain = false;
     private Queue<float> targetQueue = new Queue<float>();
     private float currentTargetPercent = 0f;
     private bool hasStartedMoving = false;
-
-    private Vector4 initialCameraPosition; // Store the initial camera position
-    private Quaternion initialCameraRotation; // Store the initial camera rotation
 
     private void Start()
     {
@@ -44,11 +41,9 @@ public class TrainController : MonoBehaviour
             }
         }
 
-        // Store the initial camera position and rotation
         if (mainCamera != null)
         {
-            initialCameraPosition = mainCamera.transform.position;
-            initialCameraRotation = mainCamera.transform.rotation;
+            mainCamera.fieldOfView = offTrainFOV; // Set default FOV
         }
         else
         {
@@ -110,17 +105,10 @@ public class TrainController : MonoBehaviour
             player.localPosition = boardingOffset; // Set to boarding offset
             player.localRotation = Quaternion.identity;
 
-            // Set the camera position to the desired offset
+            // Adjust FOV when the player is on the train
             if (mainCamera != null)
             {
-                Vector3 trainPosition = transform.position;
-
-                // Adjusting the camera's position relative to the train with the offset
-                Vector3 cameraPosition = trainPosition + cameraOffset;
-                mainCamera.transform.position = cameraPosition;
-
-                // Optionally: Make the camera look at the train
-                mainCamera.transform.LookAt(trainPosition);
+                mainCamera.fieldOfView = onTrainFOV;
             }
 
             PlayerRideController playerController = player.GetComponent<PlayerRideController>();
@@ -131,6 +119,7 @@ public class TrainController : MonoBehaviour
 
             isPlayerOnTrain = true;
             Time.timeScale = 1f; // Ensure time is running normally
+
             Debug.Log("Player boarded the train.");
         }
         else
@@ -157,14 +146,10 @@ public class TrainController : MonoBehaviour
                 playerController.SetOnTrain(false);
             }
 
-            // Restore the camera position and rotation
+            // Adjust FOV when the player exits the train
             if (mainCamera != null)
             {
-                // Reset camera position to the initial position
-                Vector4 playerCoord = new Vector4(player.position.x, player.position.y, -0.1f + 41f);
-
-                mainCamera.transform.position = playerCoord + playerCameraOffset;
-                mainCamera.transform.rotation = initialCameraRotation;
+                mainCamera.fieldOfView = offTrainFOV;
             }
 
             Debug.Log("Player exited the train and moved to: " + exitPosition);
