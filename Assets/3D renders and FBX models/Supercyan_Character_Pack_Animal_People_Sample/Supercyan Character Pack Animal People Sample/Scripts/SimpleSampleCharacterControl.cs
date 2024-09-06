@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Supercyan.AnimalPeopleSample
@@ -12,13 +13,7 @@ namespace Supercyan.AnimalPeopleSample
         public PauseMenu pauseMenu;
         private enum ControlMode
         {
-            /// <summary>
-            /// Up moves the character forward, left and right turn the character gradually and down moves the character backwards
-            /// </summary>
             Tank,
-            /// <summary>
-            /// Character freely moves in the chosen direction from the perspective of the camera
-            /// </summary>
             Direct
         }
 
@@ -52,54 +47,48 @@ namespace Supercyan.AnimalPeopleSample
 
         private void Awake()
         {
-            if (!m_animator) { gameObject.GetComponent<Animator>(); }
-            if (!m_rigidBody) { gameObject.GetComponent<Animator>(); }
+            if (!m_animator) { m_animator = GetComponent<Animator>(); }
+            if (!m_rigidBody) { m_rigidBody = GetComponent<Rigidbody>(); }
             Cursor.visible = true;
+
+            // Ensure Rigidbody settings are appropriate
+            if (m_rigidBody)
+            {
+                m_rigidBody.mass = 0.1f; // Adjust as needed
+                m_rigidBody.drag = 1; // Increase to reduce sliding
+                m_rigidBody.angularDrag = 1; // Increase to reduce spinning
+                m_rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                m_rigidBody.interpolation = RigidbodyInterpolation.Interpolate; // Smoother motion
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            ContactPoint[] contactPoints = collision.contacts;
-            for (int i = 0; i < contactPoints.Length; i++)
+            foreach (ContactPoint contact in collision.contacts)
             {
-                if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
+                if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
                 {
                     if (!m_collisions.Contains(collision.collider))
                     {
                         m_collisions.Add(collision.collider);
                     }
                     m_isGrounded = true;
+                    break; // Only need to confirm contact with one valid point
                 }
             }
         }
 
         private void OnCollisionStay(Collision collision)
         {
-            ContactPoint[] contactPoints = collision.contacts;
-            bool validSurfaceNormal = false;
-            for (int i = 0; i < contactPoints.Length; i++)
-            {
-                if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
-                {
-                    validSurfaceNormal = true; break;
-                }
-            }
+            m_isGrounded = collision.contacts.Any(contact => Vector3.Dot(contact.normal, Vector3.up) > 0.5f);
 
-            if (validSurfaceNormal)
+            if (m_isGrounded && !m_collisions.Contains(collision.collider))
             {
-                m_isGrounded = true;
-                if (!m_collisions.Contains(collision.collider))
-                {
-                    m_collisions.Add(collision.collider);
-                }
+                m_collisions.Add(collision.collider);
             }
-            else
+            else if (!m_isGrounded && m_collisions.Contains(collision.collider))
             {
-                if (m_collisions.Contains(collision.collider))
-                {
-                    m_collisions.Remove(collision.collider);
-                }
-                if (m_collisions.Count == 0) { m_isGrounded = false; }
+                m_collisions.Remove(collision.collider);
             }
         }
 
@@ -120,13 +109,11 @@ namespace Supercyan.AnimalPeopleSample
                 {
                     m_jumpInput = true;
                 }
+
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
                 playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
                 transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
-            } else
-            {
-
             }
         }
 
@@ -162,8 +149,7 @@ namespace Supercyan.AnimalPeopleSample
 
             if (v < 0)
             {
-                if (walk) { v *= m_backwardsWalkScale; }
-                else { v *= m_backwardRunScale; }
+                v = walk ? v * m_backwardsWalkScale : v * m_backwardRunScale;
             }
             else if (walk)
             {
@@ -198,10 +184,8 @@ namespace Supercyan.AnimalPeopleSample
             m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
 
             Vector3 direction = camera.forward * m_currentV + camera.right * m_currentH;
-
-            float directionLength = direction.magnitude;
             direction.y = 0;
-            direction = direction.normalized * directionLength;
+            direction = direction.normalized * direction.magnitude;
 
             if (direction != Vector3.zero)
             {
