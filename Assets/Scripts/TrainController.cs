@@ -18,7 +18,6 @@ public class TrainController : MonoBehaviour
 
     private bool isPlayerOnTrain = false;
     private Queue<float> targetQueue = new Queue<float>();
-    private float currentTargetPercent = 0f;
     private bool hasStartedMoving = false;
 
     private void Start()
@@ -78,8 +77,8 @@ public class TrainController : MonoBehaviour
             OnInteract(newTargetPercent);
         }
 
-        // Move the train continuously if it's moving
-        if (isMoving && hasStartedMoving)
+        // Move the train continuously if it's moving or if there are targets in the queue
+        if (isMoving || targetQueue.Count > 0)
         {
             MoveTrain();
         }
@@ -169,7 +168,10 @@ public class TrainController : MonoBehaviour
         }
 
         float currentPercent = (float)splineFollower.GetPercent();
-        if (newTargetPercent > currentPercent)
+        newTargetPercent = Mathf.Clamp(newTargetPercent, 0f, 1f);
+
+        // Ensure the target percent is ahead of the current position or very close
+        if (newTargetPercent >= currentPercent || Mathf.Approximately(newTargetPercent, currentPercent))
         {
             Debug.Log("OnInteract called with target: " + newTargetPercent);
             targetQueue.Enqueue(newTargetPercent);
@@ -197,38 +199,48 @@ public class TrainController : MonoBehaviour
 
         while (targetQueue.Count > 0)
         {
-            currentTargetPercent = targetQueue.Dequeue();
-            Debug.Log("Moving to position " + currentTargetPercent);
+            float targetPercent = targetQueue.Dequeue();
+            Debug.Log("Moving to position " + targetPercent);
 
             float startPercent = (float)splineFollower.GetPercent();
-            float distance = Mathf.Abs(currentTargetPercent - startPercent);
-            float currentMoveDuration = distance > 0.25f ? moveDuration * 2 : moveDuration;
+            float moveDuration = this.moveDuration;
+            float distance = Mathf.Abs(targetPercent - startPercent);
+
+            // Adjust move duration based on distance
+            if (distance > 0.25f)
+            {
+                moveDuration *= 2;
+            }
 
             float elapsedTime = 0f;
-            while (elapsedTime < currentMoveDuration)
+            while (elapsedTime < moveDuration)
             {
-                float newPercent = Mathf.Lerp(startPercent, currentTargetPercent, elapsedTime / currentMoveDuration);
+                float newPercent = Mathf.Lerp(startPercent, targetPercent, elapsedTime / moveDuration);
                 splineFollower.SetPercent(newPercent);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
 
-            splineFollower.SetPercent(currentTargetPercent);
-            Debug.Log("Reached target position " + currentTargetPercent);
+            splineFollower.SetPercent(targetPercent);
+            Debug.Log("Reached target position " + targetPercent);
 
-            // Handle increment at the end of the spline
-            if (currentTargetPercent >= 0.86f)
-            {
-                float newTargetPercent = Mathf.Clamp(currentTargetPercent + forwardIncrement, 0.0f, 1.0f);
-                Debug.Log("Near the end of the spline, moving forward a little to: " + newTargetPercent);
-                splineFollower.SetPercent(newTargetPercent);
-                currentTargetPercent = newTargetPercent;
-            }
+            // Ensure targets are processed sequentially
+            HandleSplineLoop(targetPercent);
         }
 
         isMoving = false;
         hasStartedMoving = false;
-        Debug.Log("isMoving set to false, ready for next interaction.");
+        Debug.Log("Queue is empty, ready for next interaction.");
+    }
+
+    private void HandleSplineLoop(float currentTargetPercent)
+    {
+        if (currentTargetPercent >= 1f)
+        {
+            Debug.Log("End of spline reached, looping back to start.");
+            splineFollower.SetPercent(0f); // Reset to start
+            // Optionally, re-enqueue remaining targets to ensure proper processing
+        }
     }
 
     private void MoveTrain()
@@ -238,13 +250,21 @@ public class TrainController : MonoBehaviour
             float currentPercent = (float)splineFollower.GetPercent();
             float nextPercent = Mathf.Clamp(currentPercent + (forwardIncrement / 100f), 0f, 1f);
 
+            // Check if we're close to the end of the spline and need to loop
+            if (Mathf.Approximately(nextPercent, 1f))
+            {
+                Debug.Log("End of spline reached, looping back to start.");
+                nextPercent = 0f; // Loop back to start
+            }
+
+            // Move the train to the next position
+            splineFollower.SetPercent(nextPercent);
+
+            // If nextPercent is very close to currentPercent, consider stopping
             if (Mathf.Approximately(currentPercent, nextPercent))
             {
                 isMoving = false; // Stop moving if we've reached or are very close to the target
-                return;
             }
-
-            splineFollower.SetPercent(nextPercent);
         }
     }
 }
