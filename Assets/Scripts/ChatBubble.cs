@@ -42,7 +42,7 @@ public class ChatBubble : MonoBehaviour
     [SerializeField] private Sprite angryIconSprite;
     [SerializeField] private Sprite neutralIconSprite;
 
-    [SerializeField] private Vector2 padding = new Vector2(4f, 2f);
+    [SerializeField] private Vector2 padding = new Vector2(6f, 6f);
     [SerializeField] private bool useIcon = true;
 
     private SpriteRenderer backgroundSpriteRenderer;
@@ -85,7 +85,7 @@ public class ChatBubble : MonoBehaviour
             Vector3 offset = new Vector2(-2f, 0f);
             float verticalOffset = -0.25f;
             // Position the background to be centered with the text
-            backgroundSpriteRenderer.transform.localPosition = new Vector3(adjustedSize.x / 2.37f - textMeshPro.rectTransform.pivot.x * adjustedSize.x, verticalOffset, 0f);
+            backgroundSpriteRenderer.transform.localPosition = new Vector3(adjustedSize.x / 2.32f - textMeshPro.rectTransform.pivot.x * adjustedSize.x, verticalOffset, 1f);
         }
 
         if (iconSpriteRenderer != null && !useIcon)
@@ -94,8 +94,15 @@ public class ChatBubble : MonoBehaviour
         }
         else
         {
-            iconSpriteRenderer.transform.localPosition = new Vector3(iconSpriteRenderer.transform.localPosition.x + 0.05f, iconSpriteRenderer.transform.localPosition.y, 0.02f);
+            iconSpriteRenderer.transform.localPosition = new Vector3(iconSpriteRenderer.transform.localPosition.x + 0.1f, iconSpriteRenderer.transform.localPosition.y, 0.02f);
             iconSpriteRenderer.sprite = GetIconSprite(iconType);
+            if (iconSpriteRenderer.sprite == GetIconSprite(IconType.Angry))
+            {
+                backgroundSpriteRenderer.transform.localPosition = new Vector3(adjustedSize.x / 2.22f - textMeshPro.rectTransform.pivot.x * adjustedSize.x, -0.3f, 1f);
+                iconSpriteRenderer.transform.localPosition = new Vector3(iconSpriteRenderer.transform.localPosition.x + -0.01f, iconSpriteRenderer.transform.localPosition.y, 0.02f);
+                iconSpriteRenderer.sprite = GetIconSprite(iconType);
+            }
+        
         }
 
         if (textMeshPro != null && !useIcon)
@@ -154,7 +161,6 @@ public class ChatBubble : MonoBehaviour
     {
         Vector3 toCamera = mainCamera.transform.position - transform.position;
         float dotProduct = Vector3.Dot(transform.forward, toCamera);
-
         bool isFacingCamera = dotProduct > 0f;
         textMeshPro.enabled = isFacingCamera;
         iconSpriteRenderer.enabled = isFacingCamera;
