@@ -1,22 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class ChatBubble : MonoBehaviour
 {
-
-    /*    public static void Create(Transform parent, Vector3 localPosition, IconType iconType, string text)
-        {
-            Transform chatBubbleTransform = Instantiate(GameAssets.Instance.pfChatBubble, parent);
-            chatBubbleTransform.localPosition = localPosition;
-
-            chatBubbleTransform.GetComponent<ChatBubble>().Setup(iconType, text);
-
-            Destroy(chatBubbleTransform.gameObject, 4f);
-
-        }
-    */
     public static void Create(Transform parent, Vector3 relativePosition, IconType iconType, string text)
     {
         // Adjust the position to be above the NPC or player
@@ -47,9 +34,10 @@ public class ChatBubble : MonoBehaviour
     public enum IconType
     {
         Happy,
-        Neutral, 
+        Neutral,
         Angry,
     }
+
     [SerializeField] private Sprite happyIconSprite;
     [SerializeField] private Sprite angryIconSprite;
     [SerializeField] private Sprite neutralIconSprite;
@@ -80,11 +68,11 @@ public class ChatBubble : MonoBehaviour
         }
     }
 
-  
-
     private void Setup(IconType iconType, string text)
     {
-        textMeshPro.SetText(text);
+        // Adjust the text to fit within the bubble
+        string adjustedText = AdjustTextToFit(text);
+        textMeshPro.SetText(adjustedText);
         textMeshPro.ForceMeshUpdate();
 
         Vector2 textSize = textMeshPro.GetRenderedValues(false);
@@ -102,8 +90,9 @@ public class ChatBubble : MonoBehaviour
 
         if (iconSpriteRenderer != null && !useIcon)
         {
-             iconSpriteRenderer.gameObject.SetActive(false);
-        } else
+            iconSpriteRenderer.gameObject.SetActive(false);
+        }
+        else
         {
             iconSpriteRenderer.transform.localPosition = new Vector3(iconSpriteRenderer.transform.localPosition.x + 0.05f, iconSpriteRenderer.transform.localPosition.y, 0.02f);
             iconSpriteRenderer.sprite = GetIconSprite(iconType);
@@ -112,12 +101,54 @@ public class ChatBubble : MonoBehaviour
         if (textMeshPro != null && !useIcon)
         {
             textMeshPro.gameObject.SetActive(false);
-        } else
+        }
+        else
         {
             textMeshPro.transform.localPosition = new Vector3(textMeshPro.transform.localPosition.x + 0.3f, textMeshPro.transform.localPosition.y, 0.02f);
         }
-
     }
+
+    private string AdjustTextToFit(string message)
+    {
+        const int maxCharactersPerLine = 30; // Set your maximum characters per line
+        List<string> lines = new List<string>();
+        string[] words = message.Split(' '); // Split the message into words
+
+        string currentLine = "";
+
+        foreach (string word in words)
+        {
+            // Check if adding the next word would exceed the limit
+            if (currentLine.Length + word.Length + 1 > maxCharactersPerLine) // +1 for space
+            {
+                // If the current line is not empty, add it to the lines list
+                if (!string.IsNullOrEmpty(currentLine))
+                {
+                    lines.Add(currentLine);
+                }
+                // Start a new line with the current word
+                currentLine = word;
+            }
+            else
+            {
+                // Add the word to the current line
+                if (currentLine.Length > 0) // If not the first word, add a space
+                {
+                    currentLine += " ";
+                }
+                currentLine += word;
+            }
+        }
+
+        // Add any remaining text in the current line to the lines list
+        if (!string.IsNullOrEmpty(currentLine))
+        {
+            lines.Add(currentLine);
+        }
+
+        return string.Join("\n", lines); // Join lines with a newline character
+    }
+
 
     private void Update()
     {
@@ -144,5 +175,3 @@ public class ChatBubble : MonoBehaviour
         }
     }
 }
-
-   

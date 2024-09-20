@@ -7,11 +7,10 @@ public class NPCInteractable : MonoBehaviour
     [SerializeField] private Transform chatBubbleParent; // The transform to attach the chat bubble to
     [SerializeField] private Vector3 chatBubbleOffset = new Vector3(0, 2, 0); // Offset to position the chat bubble
     [SerializeField] private ChatBubble.IconType chatBubbleIcon = ChatBubble.IconType.Happy; // Default icon type
-    [SerializeField] private string npcDialogue1;
-    [SerializeField] private string npcDialogue2;
-    [SerializeField] private string npcDialogue3;
 
-    [SerializeField] private float delayBeforeSecondDialogue = 4f;
+    [SerializeField] private List<string> npcDialogues; // List to hold dialogue lines
+
+    [SerializeField] private float delayBetweenDialogues = 4f; // Delay between dialogues
 
     public void Interact()
     {
@@ -24,24 +23,18 @@ public class NPCInteractable : MonoBehaviour
     private IEnumerator ShowDialogues()
     {
         Vector3 chatBubblePosition = new Vector3(-1, 0.7f, -1); // Adjust as needed
-        ChatBubble.Create(transform, chatBubblePosition, chatBubbleIcon, npcDialogue1);
-        string message = "Dialogue = " + npcDialogue1;
-        Debug.Log(message);
-        // Wait for the specified delay
-        yield return new WaitForSeconds(delayBeforeSecondDialogue);
-        Debug.Log(message);
-        // Show the second chat bubble
-        ChatBubble.Create(transform, chatBubblePosition, chatBubbleIcon, npcDialogue2);
-        message = "Dialogue = " + npcDialogue2;
-        Debug.Log(message);
 
-        yield return new WaitForSeconds(delayBeforeSecondDialogue);
+        for (int i = 0; i < npcDialogues.Count; i++)
+        {
+            string dialogue = npcDialogues[i];
+            ChatBubble.Create(transform, chatBubblePosition, chatBubbleIcon, dialogue);
+            Debug.Log("Dialogue = " + dialogue);
 
-        ChatBubble.Create(transform, chatBubblePosition, chatBubbleIcon, npcDialogue3);
-        message = "Dialogue = " + npcDialogue3;
-        Debug.Log(message);
+            // Wait for the specified delay before showing the next dialogue
+            if (i < npcDialogues.Count - 1) // Avoid waiting after the last dialogue
+            {
+                yield return new WaitForSeconds(delayBetweenDialogues);
+            }
+        }
     }
-
-    
-    
 }
