@@ -1,7 +1,11 @@
+#define PRODUCTION
+// #define PRODUCTION
 using UnityEngine;
 using TMPro;
 using System.Runtime.InteropServices;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting.AssemblyQualifiedNameParser;
+using System;
 
 public class Login : MonoBehaviour
 {
@@ -11,40 +15,56 @@ public class Login : MonoBehaviour
     private TMP_InputField fPasswordInputField;
     [SerializeField]
     private TextMeshProUGUI fErrorText;
-
     [DllImport("__Internal")]
-    public static extern void SignInWithEmailAndPassword(string email, string password);
+    private static extern int SignInWithEmailAndPassword(string email, string password);
 
     public void OnSubmitLogin()
     {
-        string lEmail = fEmailInputField.text;
-        string lPassword = fPasswordInputField.text;
+        string lEmail = fEmailInputField.text.Trim();
+        string lPassword = fPasswordInputField.text.Trim();
 
-        string lCheckUserInfo = checkUserInfo(lEmail, lPassword);
-        if (string.IsNullOrEmpty(lCheckUserInfo))
+#if TESTING
+        if (ValidateInput(lEmail, lPassword))
         {
-            Debug.Log("Logged In.");
-            SceneManager.LoadScene("World");
+            // SignInWithEmailAndPassword("old@gmail.com", "123456789"); // correct
+            // SignInWithEmailAndPassword("old@gmail.com", "123456789"); // incorrect
+        }
+#elif PRODUCTION
+        if (ValidateInput(lEmail, lPassword))
+        {
+            Debug.Log("Login: Input Validation Success");
+            SignInWithEmailAndPassword(lEmail, lPassword);
+        }
+#endif
+    }
+
+
+    // Method to be called by JavaScript code
+    private void ValidateAuthentication(int result)
+    {
+        if (result == 0)
+        {
+            Debug.Log("Login: Authentication Failed");
+            fErrorText.text = "Incorrect email or password";
         }
         else
         {
-            Debug.LogError(lCheckUserInfo);
-            fErrorText.text = lCheckUserInfo;
+            Debug.Log("Login: Authentication Success");
+            SceneManager.LoadScene("World");
         }
     }
 
-    private string checkUserInfo(string email, string password)
+    private bool ValidateInput(string email, string password)
     {
-        string lResult = "";
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            lResult = "Error: Please enter all required fields.";
-        }
-        else {
-            lResult = "";
+            Debug.LogError("Login: Input Validation Failed");
+            fErrorText.text = "Error: Please enter all required fields.";
+            return false;
         }
 
-        return lResult;
+        Debug.Log("Login: Input Validation Success");
+        return true;
     }
 
     public void removeErrorText()
@@ -54,12 +74,12 @@ public class Login : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SignInWithEmailAndPassword("old@gmail.com", "123456789");
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
