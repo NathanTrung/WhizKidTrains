@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting.AssemblyQualifiedNameParser;
 using System;
+using Unity.VisualScripting;
 
 public class Login : MonoBehaviour
 {
@@ -32,7 +33,6 @@ public class Login : MonoBehaviour
 #elif PRODUCTION
         if (ValidateInput(lEmail, lPassword))
         {
-            Debug.Log("Login: Input Validation Success");
             SignInWithEmailAndPassword(lEmail, lPassword);
         }
 #endif
@@ -40,7 +40,7 @@ public class Login : MonoBehaviour
 
 
     // Method to be called by JavaScript code
-    private void ValidateAuthentication(int result)
+    private void AuthenticateUser(int result)
     {
         if (result == 0)
         {
@@ -58,8 +58,19 @@ public class Login : MonoBehaviour
     {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            Debug.LogError("Login: Input Validation Failed");
-            fErrorText.text = "Error: Please enter all required fields.";
+            fErrorText.text = "Please enter all required fields.";
+            return false;
+        }
+
+        if (!ValidationService.IsValidEmail(email))
+        {
+            fErrorText.text = "Please a enter valid email";
+            return false;
+        }
+
+        if (!ValidationService.IsValidPassword(password))
+        {
+            fErrorText.text = "Please enter password with 8 or more characters";
             return false;
         }
 

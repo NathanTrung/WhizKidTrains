@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions;
 
 public class Register : MonoBehaviour
 {
@@ -14,56 +15,64 @@ public class Register : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI fErrorText;
 
-    // Firebase Auth JSCalls
     [DllImport("__Internal")]
     public static extern void CreateUserWithEmailAndPassword(string email, string password);
 
     public void OnSubmitRegister()
     {
-        string lEmail = fEmailInputField.text;
-        string lPassword = fPasswordInputField.text;
-        string lUsername = fUsernameInputField.text;
-
-        string lCheckUserInfo = checkUserInfo(lEmail, lPassword, lUsername);
-        if (string.IsNullOrEmpty(lCheckUserInfo))
+        /*
+            TO-DO:
+                - Include username
+                - Retrieve & Store user details
+        */
+        string lEmail = fEmailInputField.text.Trim();
+        string lPassword = fPasswordInputField.text.Trim();
+        if (ValidateInput(lEmail, lPassword))
         {
-            Debug.Log("Logged In.");
-            SceneManager.LoadScene("World");
-        }
-        else
-        {
-            Debug.LogError(lCheckUserInfo);
-            fErrorText.text = lCheckUserInfo;
+            CreateUserWithEmailAndPassword(lEmail, lPassword);
         }
     }
 
-    private string checkUserInfo(string email, string password, string username)
+    // Method to be called by JavaScript code
+    private void RegisterUser(int result)
     {
-        string lResult = "";
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(username))
+        if (result == 0)
         {
-            lResult = "Error: Please enter all required fields.";
+            Debug.Log("Register: Creation Failed");
+            fErrorText.text = "Unable to create account";
         }
-        else {
-            lResult = "";
+        else
+        {
+            Debug.Log("Register: Creation Success");
+            SceneManager.LoadScene("World");
+        }
+    }
+    private bool ValidateInput(string email, string password)
+    {
+        if (string.IsNullOrEmpty(email) && string.IsNullOrEmpty(password))
+        {
+            fErrorText.text = "Please enter all required fields.";
+            return false;
+        }
+        
+        if (!ValidationService.IsValidEmail(email))
+        {
+            fErrorText.text = "Please a enter valid email";
+            return false;
         }
 
-        return lResult;
+        if (!ValidationService.IsValidPassword(password))
+        {
+            fErrorText.text = "Please enter password with 8 or more characters";
+            return false;
+        }
+
+        Debug.Log("Register: Input Validation Success");
+        return true;
     }
 
     public void removeErrorText()
     {
         fErrorText.text = "";
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        CreateUserWithEmailAndPassword("new@gmail.com", "987654321");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

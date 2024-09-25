@@ -2,27 +2,23 @@ mergeInto(LibraryManager.library, {
     CreateUserWithEmailAndPassword: function (email, password) {
         var parsedEmail = UTF8ToString(email);
         var parsedPassword = UTF8ToString(password);
-        // var parsedObjectName = UTF8ToString(objectName);
-        // var parsedCallback = UTF8ToString(callback);
-        // var parsedFallback = UTF8ToString(fallback);
 
         try {
-
             firebase.auth().createUserWithEmailAndPassword(parsedEmail, parsedPassword)
                 .then(function (user) {
-                    // window.unityInstance.SendMessage(parsedObjectName, parsedCallback, "Success: signed up for " + parsedEmail);
-                    alert("SignUp Success for: " + user.email);
+                    console.log("Register Success");
+                    window.unityInstance.SendMessage("Register", "RegisterUser", 1);
                 })
                 .catch ((error) => {
                     var errorCode = error.code;
                     var errorMessage = error.message;
-                    // window.unityInstance.SendMessage(parsedObjectName, parsedFallback, JSON.stringify(error, Object.getOwnPropertyNames(error)));
-                    alert("SignUp Failed: " + errorMessage);
+                    console.log("Register Failed: " + errorMessage);
+                    window.unityInstance.SendMessage("Register", "RegisterUser", 0);
                 });
 
         } catch (error) {
-            // window.unityInstance.SendMessage(parsedObjectName, parsedFallback, JSON.stringify(error, Object.getOwnPropertyNames(error)));
             console.log(error);
+            window.unityInstance.SendMessage("Register", "RegisterUser", 0);
         }
     },
 
@@ -49,6 +45,6 @@ mergeInto(LibraryManager.library, {
     },
 
     TestCallBack: function() {
-        window.unityInstance.SendMessage("Login", "ValidateAuthentication", 256);
+        window.unityInstance.SendMessage("Login", "AuthenticateUser", 256);
     }
 });
