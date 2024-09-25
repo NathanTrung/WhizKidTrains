@@ -1,12 +1,7 @@
-#define PRODUCTION
-// #define PRODUCTION
 using UnityEngine;
 using TMPro;
 using System.Runtime.InteropServices;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting.AssemblyQualifiedNameParser;
-using System;
-using Unity.VisualScripting;
 
 public class Login : MonoBehaviour
 {
@@ -24,18 +19,10 @@ public class Login : MonoBehaviour
         string lEmail = fEmailInputField.text.Trim();
         string lPassword = fPasswordInputField.text.Trim();
 
-#if TESTING
-        if (ValidateInput(lEmail, lPassword))
-        {
-            // SignInWithEmailAndPassword("old@gmail.com", "123456789"); // correct
-            // SignInWithEmailAndPassword("old@gmail.com", "123456789"); // incorrect
-        }
-#elif PRODUCTION
         if (ValidateInput(lEmail, lPassword))
         {
             SignInWithEmailAndPassword(lEmail, lPassword);
         }
-#endif
     }
 
 
@@ -81,16 +68,5 @@ public class Login : MonoBehaviour
     public void removeErrorText()
     {
         fErrorText.text = "";
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
