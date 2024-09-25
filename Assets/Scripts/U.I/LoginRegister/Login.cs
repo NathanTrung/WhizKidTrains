@@ -11,55 +11,62 @@ public class Login : MonoBehaviour
     private TMP_InputField fPasswordInputField;
     [SerializeField]
     private TextMeshProUGUI fErrorText;
-
     [DllImport("__Internal")]
-    public static extern void SignInWithEmailAndPassword(string email, string password);
+    private static extern int SignInWithEmailAndPassword(string email, string password);
 
     public void OnSubmitLogin()
     {
-        string lEmail = fEmailInputField.text;
-        string lPassword = fPasswordInputField.text;
+        string lEmail = fEmailInputField.text.Trim();
+        string lPassword = fPasswordInputField.text.Trim();
 
-        string lCheckUserInfo = checkUserInfo(lEmail, lPassword);
-        if (string.IsNullOrEmpty(lCheckUserInfo))
+        if (ValidateInput(lEmail, lPassword))
         {
-            Debug.Log("Logged In.");
-            SceneManager.LoadScene("World");
-        }
-        else
-        {
-            Debug.LogError(lCheckUserInfo);
-            fErrorText.text = lCheckUserInfo;
+            SignInWithEmailAndPassword(lEmail, lPassword);
         }
     }
 
-    private string checkUserInfo(string email, string password)
+
+    // Method to be called by JavaScript code
+    private void AuthenticateUser(int result)
     {
-        string lResult = "";
+        if (result == 0)
+        {
+            Debug.Log("Login: Authentication Failed");
+            fErrorText.text = "Incorrect email or password";
+        }
+        else
+        {
+            Debug.Log("Login: Authentication Success");
+            SceneManager.LoadScene("World");
+        }
+    }
+
+    private bool ValidateInput(string email, string password)
+    {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
-            lResult = "Error: Please enter all required fields.";
-        }
-        else {
-            lResult = "";
+            fErrorText.text = "Please enter all required fields.";
+            return false;
         }
 
-        return lResult;
+        if (!ValidationService.IsValidEmail(email))
+        {
+            fErrorText.text = "Please a enter valid email";
+            return false;
+        }
+
+        if (!ValidationService.IsValidPassword(password))
+        {
+            fErrorText.text = "Please enter password with 8 or more characters";
+            return false;
+        }
+
+        Debug.Log("Login: Input Validation Success");
+        return true;
     }
 
     public void removeErrorText()
     {
         fErrorText.text = "";
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        SignInWithEmailAndPassword("old@gmail.com", "123456789");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
