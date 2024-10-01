@@ -268,21 +268,8 @@ PrefabInstance:
       addedObject: {fileID: 969227166052541053}
     - targetCorrespondingSourceObject: {fileID: 3115044124669147887, guid: 5b4355d6212d0c8439664d1ea3a0ce98, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4997935508852158361}
-    - targetCorrespondingSourceObject: {fileID: 3115044124669147887, guid: 5b4355d6212d0c8439664d1ea3a0ce98, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 6990544490805119738}
   m_SourcePrefab: {fileID: 100100000, guid: 5b4355d6212d0c8439664d1ea3a0ce98, type: 3}
---- !u!54 &19516090002777668 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 6287757212439907335, guid: 5b4355d6212d0c8439664d1ea3a0ce98, type: 3}
-  m_PrefabInstance: {fileID: 6271205414510307907}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &3461736385824066457 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7425665027789693402, guid: 5b4355d6212d0c8439664d1ea3a0ce98, type: 3}
-  m_PrefabInstance: {fileID: 6271205414510307907}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8608279484774648342 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2337663477354733653, guid: 5b4355d6212d0c8439664d1ea3a0ce98, type: 3}
@@ -306,24 +293,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactRange: 2
---- !u!114 &4997935508852158361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8952329474166673580}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2bbb308db9d84d4984d8044114d987b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_moveSpeed: 5
-  m_turnSpeed: 150
-  m_jumpForce: 4
-  m_animator: {fileID: 3461736385824066457}
-  m_rigidBody: {fileID: 19516090002777668}
-  m_controlMode: 1
 --- !u!114 &6990544490805119738
 MonoBehaviour:
   m_ObjectHideFlags: 0
