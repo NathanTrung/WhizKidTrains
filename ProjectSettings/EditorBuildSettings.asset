@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/LoginRegister/Register.unity
     guid: ea2f37cb78a83e145a4d1e5c1bb24d75
   - enabled: 1
+    path: Assets/Scenes/Selection.unity
+    guid: f0e8e30ccd30c8d4396a5c8bb861f1c4
+  - enabled: 1
     path: Assets/Scenes/World.unity
     guid: 6243efff6cec15a46bcbf2d12bdd3de7
   - enabled: 1

@@ -10,6 +10,7 @@ namespace Supercyan.AnimalPeopleSample
         private float lookSpeed = 2f;
         private float lookXLimit = 45f;
         public PauseMenu pauseMenu;
+
         private enum ControlMode
         {
             /// <summary>
@@ -52,14 +53,30 @@ namespace Supercyan.AnimalPeopleSample
 
         private void Awake()
         {
-            if (!m_animator) { gameObject.GetComponent<Animator>(); }
-            if (!m_rigidBody) { gameObject.GetComponent<Animator>(); }
+            if (!m_animator) { m_animator = gameObject.GetComponent<Animator>(); }
+            if (!m_rigidBody) { m_rigidBody = gameObject.GetComponent<Rigidbody>(); }
             Cursor.visible = true;
+
+            // Additional Rigidbody setup to prevent bouncing
+            if (m_rigidBody != null)
+            {
+                // Freeze rotation to prevent unintended physics-based rotation
+                m_rigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
+                // Optionally, adjust drag values here if not set via Inspector
+                // m_rigidBody.drag = 1f;
+                // m_rigidBody.angularDrag = 1f;
+
+                // Set collision detection mode to Continuous for better collision handling
+                m_rigidBody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             ContactPoint[] contactPoints = collision.contacts;
+            bool validSurfaceNormal = false;
+
             for (int i = 0; i < contactPoints.Length; i++)
             {
                 if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
@@ -68,7 +85,20 @@ namespace Supercyan.AnimalPeopleSample
                     {
                         m_collisions.Add(collision.collider);
                     }
-                    m_isGrounded = true;
+                    validSurfaceNormal = true;
+                }
+            }
+
+            if (validSurfaceNormal)
+            {
+                m_isGrounded = true;
+
+                // Mitigate bouncing by resetting vertical velocity upon landing
+                if (m_rigidBody != null)
+                {
+                    Vector3 velocity = m_rigidBody.velocity;
+                    velocity.y = 0;
+                    m_rigidBody.velocity = velocity;
                 }
             }
         }
@@ -81,7 +111,8 @@ namespace Supercyan.AnimalPeopleSample
             {
                 if (Vector3.Dot(contactPoints[i].normal, Vector3.up) > 0.5f)
                 {
-                    validSurfaceNormal = true; break;
+                    validSurfaceNormal = true;
+                    break;
                 }
             }
 
@@ -124,9 +155,10 @@ namespace Supercyan.AnimalPeopleSample
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
                 playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
                 transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
-            } else
+            }
+            else
             {
-
+                // Handle pause state if necessary
             }
         }
 
@@ -147,6 +179,14 @@ namespace Supercyan.AnimalPeopleSample
                 default:
                     Debug.LogError("Unsupported state");
                     break;
+            }
+
+            // Optional: Clamp the Rigidbody's velocity to prevent excessive speeds
+            if (m_rigidBody != null)
+            {
+                Vector3 clampedVelocity = m_rigidBody.velocity;
+                clampedVelocity = Vector3.ClampMagnitude(clampedVelocity, 10f); // Adjust max speed as needed
+                m_rigidBody.velocity = clampedVelocity;
             }
 
             m_wasGrounded = m_isGrounded;
@@ -173,7 +213,8 @@ namespace Supercyan.AnimalPeopleSample
             m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
             m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
 
-            transform.position += transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
+            Vector3 movement = transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
+            transform.position += movement;
             transform.Rotate(0, m_currentH * m_turnSpeed * Time.deltaTime, 0);
 
             m_animator.SetFloat("MoveSpeed", m_currentV);
@@ -224,6 +265,7 @@ namespace Supercyan.AnimalPeopleSample
             {
                 m_jumpTimeStamp = Time.time;
                 m_rigidBody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
+                m_isGrounded = false; // Prevent multiple jumps
             }
 
             if (!m_wasGrounded && m_isGrounded)

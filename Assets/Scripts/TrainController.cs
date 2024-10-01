@@ -71,11 +71,6 @@ public class TrainController : MonoBehaviour
             }
         }
 
-        if (isPlayerOnTrain && Input.GetKeyDown(KeyCode.Space)) // Interaction key
-        {
-            float newTargetPercent = 0.5f; // Example target
-            OnInteract(newTargetPercent);
-        }
 
         // Move the train continuously if it's moving or if there are targets in the queue
         if (isMoving || targetQueue.Count > 0)
