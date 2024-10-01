@@ -19,10 +19,9 @@ public class Login : MonoBehaviour
         string lEmail = fEmailInputField.text.Trim();
         string lPassword = fPasswordInputField.text.Trim();
 
-        SceneManager.LoadScene("World"); 
         if (ValidateInput(lEmail, lPassword))
         {
-            // SignInWithEmailAndPassword(lEmail, lPassword);
+            SignInWithEmailAndPassword(lEmail, lPassword);
         }
     }
 
