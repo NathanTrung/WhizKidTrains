@@ -145,21 +145,21 @@ namespace Supercyan.AnimalPeopleSample
 
         private void Update()
         {
-            if (!PauseMenu.isPaused1)
-            {
-                if (!m_jumpInput && Input.GetKey(KeyCode.Space))
-                {
-                    m_jumpInput = true;
-                }
-                rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-                rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-                playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-                transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
-            }
-            else
-            {
-                // Handle pause state if necessary
-            }
+            // if (!PauseMenu.isPaused1)
+            // {
+            //     if (!m_jumpInput && Input.GetKey(KeyCode.Space))
+            //     {
+            //         m_jumpInput = true;
+            //     }
+            //     rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+            //     rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+            //     playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            //     transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+            // }
+            // else
+            // {
+            //     // Handle pause state if necessary
+            // }
         }
 
         private void FixedUpdate()

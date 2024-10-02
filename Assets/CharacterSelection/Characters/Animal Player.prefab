@@ -1224,7 +1224,7 @@ MonoBehaviour:
   m_jumpForce: 4
   m_animator: {fileID: 3461736385824066457}
   m_rigidBody: {fileID: 19516090002777668}
-  m_controlMode: 1
+  m_controlMode: 0
 --- !u!1 &8977703000125813922
 GameObject:
   m_ObjectHideFlags: 0

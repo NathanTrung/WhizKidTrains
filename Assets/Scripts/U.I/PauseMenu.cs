@@ -1,30 +1,20 @@
-using Supercyan.AnimalPeopleSample;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // For working with sliders/buttons
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenu;
-    public GameObject settingsMenu; // Reference to the Settings Menu UI
+    [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject settingsMenu; // Reference to the Settings Menu UI
+    [SerializeField] private Slider volumeSlider; // Example: For controlling volume
+    [SerializeField] private Dropdown qualityDropdown; // Example: For changing quality settings
     public bool isPaused;
-    public static bool isPaused1;
-    private SimpleSampleCharacterControl cameraController;
-
-    // Settings options
-    public Slider volumeSlider; // Example: For controlling volume
-    public Dropdown qualityDropdown; // Example: For changing quality settings
 
     private void Start()
     {
-        cameraController = GetComponent<SimpleSampleCharacterControl>();
         ResumeGame();
-
-        // Initialize settings values if needed
         volumeSlider.onValueChanged.AddListener(SetVolume);
         qualityDropdown.onValueChanged.AddListener(SetQuality);
-
-        // Initialize dropdown with current quality level
         qualityDropdown.value = QualitySettings.GetQualityLevel();
     }
 
@@ -41,36 +31,24 @@ public class PauseMenu : MonoBehaviour
                 PauseGame();
             }
         }
-
-
     }
 
     public void PauseGame()
     {
         pauseMenu.SetActive(true);
         settingsMenu.SetActive(false); // Hide the settings menu when paused
-        Time.timeScale = 0f;
+        Time.timeScale = 0f; // Enable for single player
         Cursor.lockState = CursorLockMode.Confined;
         isPaused = true;
-        isPaused1 = true;
-        if (cameraController != null)
-        {
-            cameraController.enabled = false;
-        }
     }
 
     public void ResumeGame()
     {
         pauseMenu.SetActive(false);
         settingsMenu.SetActive(false); // Hide the settings menu when resuming the game
-        Time.timeScale = 1f;
+        Time.timeScale = 1f; // Enable for single player
         Cursor.lockState = CursorLockMode.Locked;
         isPaused = false;
-        isPaused1 = false;
-        if (cameraController != null)
-        {
-            cameraController.enabled = true;
-        }
     }
 
     public void MainMenu()

@@ -5,11 +5,10 @@ namespace WhizKid.Player
 {
     public class PlayerController : MonoBehaviour
     {
-        public Camera playerCamera;
+        [SerializeField] private Camera playerCamera;
         private float rotationX = 0;
         private float lookSpeed = 2f;
         private float lookXLimit = 45f;
-        public PauseMenu pauseMenu;
 
         private enum ControlMode
         {
@@ -31,6 +30,7 @@ namespace WhizKid.Player
 
         [SerializeField] private Animator m_animator;
         [SerializeField] private Rigidbody m_rigidBody;
+        [SerializeField] private PauseMenu pauseMenu;
 
         [SerializeField] private ControlMode m_controlMode = ControlMode.Tank;
 
@@ -81,7 +81,7 @@ namespace WhizKid.Player
 
         private void Update()
         {
-            if (PauseMenu.isPaused1)
+            if (pauseMenu.isPaused)
             {
                 // handle pause state
                 return;
