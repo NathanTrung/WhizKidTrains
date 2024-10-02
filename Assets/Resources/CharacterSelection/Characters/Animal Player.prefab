@@ -1218,12 +1218,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 330237420429333847}
-  pauseMenu: {fileID: 0}
   m_moveSpeed: 2
   m_turnSpeed: 200
   m_jumpForce: 4
   m_animator: {fileID: 3461736385824066457}
   m_rigidBody: {fileID: 19516090002777668}
+  pauseMenu: {fileID: 0}
   m_controlMode: 0
 --- !u!1 &8977703000125813922
 GameObject:

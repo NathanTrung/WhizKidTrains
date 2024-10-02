@@ -30,7 +30,7 @@ namespace WhizKid.Player
 
         [SerializeField] private Animator m_animator;
         [SerializeField] private Rigidbody m_rigidBody;
-        [SerializeField] private PauseMenu pauseMenu;
+        [SerializeField] private GameObject pauseMenu;
 
         [SerializeField] private ControlMode m_controlMode = ControlMode.Tank;
 
@@ -79,9 +79,14 @@ namespace WhizKid.Player
             }
         }
 
+        private void Start()
+        {
+            if (pauseMenu == null) pauseMenu = GameObject.Find("PauseMenuManager");
+        }
+
         private void Update()
         {
-            if (pauseMenu.isPaused)
+            if (pauseMenu.GetComponent<PauseMenu>().isPaused)
             {
                 // handle pause state
                 return;
