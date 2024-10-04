@@ -48,8 +48,9 @@ namespace WhizKid.Player
         private bool m_wasGrounded;
         private Vector3 m_currentDirection = Vector3.zero;
 
-        private float m_jumpTimeStamp = 0;
-        private float m_minJumpInterval = 0.25f;
+        [Header("Jump Settings")]
+        [SerializeField] private float m_jumpTimeStamp = 0;
+        [SerializeField] private float m_minJumpInterval = 0.25f;
         private bool m_jumpInput = false;
 
         private bool m_isGrounded;
