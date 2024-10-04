@@ -71,13 +71,3 @@ public class WorldManager : MonoBehaviour
         }
     }
 }
-
-public enum LocationType
-{
-    SpawnPoint,
-    House,
-    School,
-    Airport,
-    Aquarium,
-    Cinemas,
-}

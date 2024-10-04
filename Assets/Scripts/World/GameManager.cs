@@ -1,10 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public enum LocationType
+    {
+        SpawnPoint,
+        House,
+        School,
+        Airport,
+        Aquarium,
+        Cinemas,
+    }
 
     private readonly Dictionary<string, Vector3> locations = new Dictionary<string, Vector3>
     {
