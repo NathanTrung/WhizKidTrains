@@ -59,7 +59,6 @@ public class Login : MonoBehaviour
             return false;
         }
 
-        Debug.Log("Login: Input Validation Success");
         return true;
     }
 
