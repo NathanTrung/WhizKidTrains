@@ -87,12 +87,10 @@ namespace WhizKid.Player
 
         private void Update()
         {
-            if (pauseMenu.GetComponent<PauseMenu>().isPaused)
+            if (WorldManager.isPaused)
             {
-                // handle pause state
                 return;
             }
-
             if (!m_jumpInput && Input.GetKey(KeyCode.Space))
             {
                 m_jumpInput = true;

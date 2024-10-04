@@ -9,7 +9,6 @@ namespace Supercyan.AnimalPeopleSample
         // private float rotationX = 0;
         // private float lookSpeed = 2f;
         // private float lookXLimit = 45f;
-        public PauseMenu pauseMenu;
 
         private enum ControlMode
         {
