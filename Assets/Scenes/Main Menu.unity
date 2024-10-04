@@ -2357,7 +2357,7 @@ MonoBehaviour:
   loginRegisterPanel: {fileID: 1986942470}
   loginPanel: {fileID: 1090508434}
   registerPanel: {fileID: 1277709290}
-  settingsPanel: {fileID: 0}
+  settingsPanel: {fileID: 596213602}
 --- !u!4 &931166179
 Transform:
   m_ObjectHideFlags: 0
