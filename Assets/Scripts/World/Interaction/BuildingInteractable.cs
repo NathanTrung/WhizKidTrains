@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Import the Scene Management namespace
+using UnityEngine.SceneManagement;
 
 public class BuildingInteractable : MonoBehaviour
 {
-    [SerializeField] private string sceneToLoad; // Name of the scene to load
+    [SerializeField] private string sceneToLoad;
 
     public void Interact()
     {
@@ -13,7 +13,6 @@ public class BuildingInteractable : MonoBehaviour
 
     private void LoadScene()
     {
-        // Load the specified scene
         SceneManager.LoadScene(sceneToLoad);
     }
 }

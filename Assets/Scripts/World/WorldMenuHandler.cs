@@ -6,15 +6,25 @@ using WhizKid.Player;
 
 public class WorldMenuHandler : MonoBehaviour
 {
+    #region Serialized Private Fields
+    [SerializeField] private PlayerController playerInstance;
+
+    [Header("Menu Panels")]
     [SerializeField] private GameObject introPanel;
     [SerializeField] private GameObject pauseMenuPanel;
+    [SerializeField] private GameObject gameDashboardPanel;
     [SerializeField] private GameObject settingsMenuPanel;
+
+    [Header("Settings")]
     [SerializeField] private Slider volumeSlider;
     [SerializeField] private Dropdown qualityDropdown;
-    [SerializeField] private PlayerController playerInstance;
+    #endregion
 
     private void Start()
     {
+        pauseMenuPanel.SetActive(false);
+        settingsMenuPanel.SetActive(false);
+        gameDashboardPanel.SetActive(false);
         volumeSlider.onValueChanged.AddListener(SetVolume);
         qualityDropdown.onValueChanged.AddListener(SetQuality);
         qualityDropdown.value = QualitySettings.GetQualityLevel();
@@ -22,26 +32,9 @@ public class WorldMenuHandler : MonoBehaviour
 
     #region Introduction Methods
 
-    public void EnableIntro()
-    {
-        introPanel.SetActive(true);
-        pauseMenuPanel.SetActive(false);
-        settingsMenuPanel.SetActive(false);
-        Cursor.lockState = CursorLockMode.Confined;
-        Time.timeScale = 0f;
-    }
-
-    public void DisableIntro()
-    {
-        introPanel.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
-        Time.timeScale = 1f;
-    }
-
-    public bool IsIntroActive()
-    {
-        return introPanel.activeSelf;
-    }
+    public void EnableIntro() => introPanel.SetActive(true);
+    public void DisableIntro() => introPanel.SetActive(false);
+    public bool IsIntroActive() => introPanel.activeSelf;
 
     #endregion
     #region Pause Methods
@@ -49,38 +42,38 @@ public class WorldMenuHandler : MonoBehaviour
     public void Pause()
     {
         pauseMenuPanel.SetActive(true);
+        gameDashboardPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
-        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public void Unpause()
     {
         pauseMenuPanel.SetActive(false);
+        gameDashboardPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
 
         // playerinstance present in both world manager 
         // require code redesign
 
         playerInstance.enabled = true; 
-        Cursor.lockState = CursorLockMode.Locked;
         WorldManager.isPaused = false;
     }
 
-    public void MainMenu()
+    public void GameDashboard()
     {
-        SceneManager.LoadScene("Main Menu");
+        pauseMenuPanel.SetActive(false);
+        gameDashboardPanel.SetActive(true);
+        settingsMenuPanel.SetActive(false);
     }
 
-    public void OpenSettingsPanel()
+    #endregion
+    #region Settings Panel
+
+    public void Settings()
     {
         pauseMenuPanel.SetActive(false);
         settingsMenuPanel.SetActive(true);
-    }
-
-    public void CloseSettingsPanel()
-    {
-        settingsMenuPanel.SetActive(false);
-        pauseMenuPanel.SetActive(true);
+        gameDashboardPanel.SetActive(false);
     }
 
     public void SetVolume(float volume)
@@ -95,4 +88,9 @@ public class WorldMenuHandler : MonoBehaviour
     }
 
     #endregion
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("Main Menu");
+    }
 }
