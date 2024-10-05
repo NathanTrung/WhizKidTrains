@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Text.RegularExpressions;
+
+/// <summary>
+/// Store validation rules as methods
+/// </summary>
 public static class ValidationService
 {
     public static bool IsValidEmail(string email)

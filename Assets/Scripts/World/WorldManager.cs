@@ -1,8 +1,11 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using WhizKid.Player;
 
+/// <summary>
+/// Manages instantion for players and objects
+/// Responsible for handling world specific logic  
+/// and rules outside of mini games
+/// </summary>
 public class WorldManager : MonoBehaviour
 {
     static public WorldManager Instance;
