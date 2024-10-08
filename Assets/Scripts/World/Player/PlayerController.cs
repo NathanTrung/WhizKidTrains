@@ -1,60 +1,66 @@
 ﻿using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 namespace WhizKid.Player
 {
     public class PlayerController : MonoBehaviour
     {
+        #region Enumerations
+        /// <summary>
+        /// TANK: Up moves the character forward, left and right turn the character gradually and down moves the character backwards
+        /// DIRECT: Character freely moves in the chosen direction from the perspective of the camera
+        /// </summary>
+        private enum ControlMode { Tank, Direct }
+        /// <summary>
+        /// Used for determining camera, positioning, etc, based on player state
+        /// </summary>
+        public enum STATE { Normal, InTrain, InMiniGame }
+
+        #endregion
+        #region Other Fields
+        [SerializeField] private GameObject pauseMenu;
+        [SerializeField] private Animator m_animator;
+        [SerializeField] private Rigidbody m_rigidBody;
+        private List<Collider> m_collisions = new List<Collider>();
+        public STATE currentState = STATE.Normal;
+
+        #endregion
+        #region Camera Fields
+
+        [Header("Camera Settings")]
         [SerializeField] private Camera playerCamera;
+        [SerializeField] private bool usingCinemachine;
         private float rotationX = 0;
         private float lookSpeed = 2f;
         private float lookXLimit = 45f;
+        private Vector3 normalCameraPos = new Vector3(0.7f, 1.15f, -2f);
+        private Vector3 trainCameraPos = new Vector3(0.7f, 2f, -2f);
 
-        private enum ControlMode
-        {
-            /// <summary>
-            /// Up moves the character forward, left and right turn the character gradually and down moves the character backwards
-            /// </summary>
-            Tank,
-            /// <summary>
-            /// Character freely moves in the chosen direction from the perspective of the camera
-            /// </summary>
-            Direct
-        }
+        #endregion
+        #region Movement Fields
 
-        #region Private Serialized Fields
-
+        [Header("Movement Settings")]
         [SerializeField] private float m_moveSpeed = 2;
         [SerializeField] private float m_turnSpeed = 200;
         [SerializeField] private float m_jumpForce = 4;
-
-        [SerializeField] private Animator m_animator;
-        [SerializeField] private Rigidbody m_rigidBody;
-        [SerializeField] private GameObject pauseMenu;
-
         [SerializeField] private ControlMode m_controlMode = ControlMode.Tank;
-
-        #endregion
-        #region Private Fields
-
         private float m_currentV = 0;
         private float m_currentH = 0;
-
         private readonly float m_interpolation = 10;
         private readonly float m_walkScale = 0.33f;
         private readonly float m_backwardsWalkScale = 0.16f;
         private readonly float m_backwardRunScale = 0.66f;
-
-        private bool m_wasGrounded;
         private Vector3 m_currentDirection = Vector3.zero;
+        #endregion
+        #region Jump Fields
 
         [Header("Jump Settings")]
         [SerializeField] private float m_jumpTimeStamp = 0;
         [SerializeField] private float m_minJumpInterval = 0.25f;
-        private bool m_jumpInput = false;
-
+        [SerializeField] private bool m_jumpInput = false;
         private bool m_isGrounded;
-        private List<Collider> m_collisions = new List<Collider>();
+        private bool m_wasGrounded;
 
         #endregion
         #region MonoBehaviour CallBacks
@@ -87,21 +93,13 @@ namespace WhizKid.Player
 
         private void Update()
         {
-            if (WorldManager.isPaused)
-            {
-                return;
-            }
+            if (WorldManager.isPaused) return;
             if (!m_jumpInput && Input.GetKey(KeyCode.Space))
             {
                 m_jumpInput = true;
             }
-            CameraMovement();
-        }
 
-        private void FixedUpdate()
-        {
-            m_animator.SetBool("Grounded", m_isGrounded);
-
+            // movement
             switch (m_controlMode)
             {
                 case ControlMode.Direct:
@@ -125,8 +123,155 @@ namespace WhizKid.Player
                 m_rigidBody.velocity = clampedVelocity;
             }
 
+            // Camera
+            if (!usingCinemachine)
+            {
+                playerCamera.GetComponent<CinemachineBrain>().enabled = false;
+                FixedCameraMovement();
+            }
+            else
+            {
+                playerCamera.GetComponent<CinemachineBrain>().enabled = true;
+                FreeCameraMovement();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            m_animator.SetBool("Grounded", m_isGrounded);
             m_wasGrounded = m_isGrounded;
             m_jumpInput = false;
+        }
+
+        #endregion
+        #region Custom methods
+
+        private void TankUpdate()
+        {
+            float v = Input.GetAxis("Vertical");
+            float h = Input.GetAxis("Horizontal");
+
+            bool walk = Input.GetKey(KeyCode.LeftShift);
+
+            if (v < 0)
+            {
+                if (walk) { v *= m_backwardsWalkScale; }
+                else { v *= m_backwardRunScale; }
+            }
+            else if (walk)
+            {
+                v *= m_walkScale;
+            }
+
+            m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
+            m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
+
+            Vector3 movement = transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
+            transform.position += movement;
+
+            // Rotation
+            if (!usingCinemachine)
+            {
+                transform.Rotate(0, m_currentH * m_turnSpeed * Time.deltaTime, 0);
+                m_animator.SetFloat("MoveSpeed", m_currentV);
+            }
+
+            JumpingAndLanding();
+        }
+
+        private void DirectUpdate()
+        {
+            float v = Input.GetAxis("Vertical");
+            float h = Input.GetAxis("Horizontal");
+
+            Transform camera = Camera.main.transform;
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                v *= m_walkScale;
+                h *= m_walkScale;
+            }
+
+            m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
+            m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
+
+            Vector3 direction = camera.forward * m_currentV + camera.right * m_currentH;
+
+            float directionLength = direction.magnitude;
+            direction.y = 0;
+            direction = direction.normalized * directionLength;
+
+            if (direction != Vector3.zero)
+            {
+                m_currentDirection = Vector3.Slerp(m_currentDirection, direction, Time.deltaTime * m_interpolation);
+
+                transform.rotation = Quaternion.LookRotation(m_currentDirection);
+                transform.position += m_currentDirection * m_moveSpeed * Time.deltaTime;
+
+                m_animator.SetFloat("MoveSpeed", direction.magnitude);
+            }
+
+            JumpingAndLanding();
+        }
+
+        private void JumpingAndLanding()
+        {
+            bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_minJumpInterval;
+
+            if (jumpCooldownOver && m_isGrounded && m_jumpInput)
+            {
+                m_jumpTimeStamp = Time.time;
+                m_rigidBody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
+                m_isGrounded = false; // Prevent multiple jumps
+            }
+
+            if (!m_wasGrounded && m_isGrounded)
+            {
+                m_animator.SetTrigger("Land");
+            }
+
+            if (!m_isGrounded && m_wasGrounded)
+            {
+                m_animator.SetTrigger("Jump");
+            }
+        }
+
+        /// <summary>
+        /// Main Camera movement. Locks camera direction to player. 
+        /// <br/>LF movement is controlled by camera and vice verse.
+        /// </summary>
+        private void FixedCameraMovement()
+        {
+            playerCamera.transform.position = transform.position + transform.TransformDirection(normalCameraPos);
+            transform.LookAt(transform);
+            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+        }
+
+        /// <summary>
+        /// Rotate Player to the direction of CinemaCamera.
+        /// <br/>Allows player to look around without interferring with player rotation and movement.
+        /// <br/><br/><strong>Enable CinemaMachine Component on Main Camera to use.</strong>
+        /// </summary>
+        private void FreeCameraMovement()
+        {
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
+            Vector3 movementDirection = new Vector3(h, 0, v);
+            float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+
+            movementDirection = Quaternion.AngleAxis(playerCamera.transform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
+            movementDirection.Normalize();
+
+            if (movementDirection != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, m_turnSpeed * Time.deltaTime);
+            }
+
+            m_animator.SetFloat("MoveSpeed", inputMagnitude, 0.05f, Time.deltaTime);
         }
 
         #endregion
@@ -201,102 +346,6 @@ namespace WhizKid.Player
                 m_collisions.Remove(collision.collider);
             }
             if (m_collisions.Count == 0) { m_isGrounded = false; }
-        }
-
-        #endregion
-        #region Custom methods
-
-        private void CameraMovement()
-        {
-            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
-        }
-        private void TankUpdate()
-        {
-            float v = Input.GetAxis("Vertical");
-            float h = Input.GetAxis("Horizontal");
-
-            bool walk = Input.GetKey(KeyCode.LeftShift);
-
-            if (v < 0)
-            {
-                if (walk) { v *= m_backwardsWalkScale; }
-                else { v *= m_backwardRunScale; }
-            }
-            else if (walk)
-            {
-                v *= m_walkScale;
-            }
-
-            m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
-            m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
-
-            Vector3 movement = transform.forward * m_currentV * m_moveSpeed * Time.deltaTime;
-            transform.position += movement;
-            transform.Rotate(0, m_currentH * m_turnSpeed * Time.deltaTime, 0);
-
-            m_animator.SetFloat("MoveSpeed", m_currentV);
-
-            JumpingAndLanding();
-        }
-
-        private void DirectUpdate()
-        {
-            float v = Input.GetAxis("Vertical");
-            float h = Input.GetAxis("Horizontal");
-
-            Transform camera = Camera.main.transform;
-
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                v *= m_walkScale;
-                h *= m_walkScale;
-            }
-
-            m_currentV = Mathf.Lerp(m_currentV, v, Time.deltaTime * m_interpolation);
-            m_currentH = Mathf.Lerp(m_currentH, h, Time.deltaTime * m_interpolation);
-
-            Vector3 direction = camera.forward * m_currentV + camera.right * m_currentH;
-
-            float directionLength = direction.magnitude;
-            direction.y = 0;
-            direction = direction.normalized * directionLength;
-
-            if (direction != Vector3.zero)
-            {
-                m_currentDirection = Vector3.Slerp(m_currentDirection, direction, Time.deltaTime * m_interpolation);
-
-                transform.rotation = Quaternion.LookRotation(m_currentDirection);
-                transform.position += m_currentDirection * m_moveSpeed * Time.deltaTime;
-
-                m_animator.SetFloat("MoveSpeed", direction.magnitude);
-            }
-
-            JumpingAndLanding();
-        }
-
-        private void JumpingAndLanding()
-        {
-            bool jumpCooldownOver = (Time.time - m_jumpTimeStamp) >= m_minJumpInterval;
-
-            if (jumpCooldownOver && m_isGrounded && m_jumpInput)
-            {
-                m_jumpTimeStamp = Time.time;
-                m_rigidBody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
-                m_isGrounded = false; // Prevent multiple jumps
-            }
-
-            if (!m_wasGrounded && m_isGrounded)
-            {
-                m_animator.SetTrigger("Land");
-            }
-
-            if (!m_isGrounded && m_wasGrounded)
-            {
-                m_animator.SetTrigger("Jump");
-            }
         }
 
         #endregion
