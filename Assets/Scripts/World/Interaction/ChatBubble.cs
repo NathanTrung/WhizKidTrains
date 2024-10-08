@@ -41,30 +41,30 @@ public class ChatBubble : MonoBehaviour
     [SerializeField] private Sprite happyIconSprite;
     [SerializeField] private Sprite angryIconSprite;
     [SerializeField] private Sprite neutralIconSprite;
-
+    [SerializeField] private SpriteRenderer backgroundSpriteRenderer;
+    [SerializeField] private SpriteRenderer iconSpriteRenderer;
+    [SerializeField] private TextMeshPro textMeshPro;
     [SerializeField] private Vector2 padding = new Vector2(6f, 6f);
     [SerializeField] private bool useIcon = true;
-
-    private SpriteRenderer backgroundSpriteRenderer;
-    private SpriteRenderer iconSpriteRenderer;
-    private TextMeshPro textMeshPro;
     private Camera mainCamera;
 
     private void Awake()
     {
-        backgroundSpriteRenderer = transform.Find("Background")?.GetComponent<SpriteRenderer>();
-        iconSpriteRenderer = transform.Find("Icon")?.GetComponent<SpriteRenderer>();
-        textMeshPro = transform.Find("Text")?.GetComponent<TextMeshPro>();
         mainCamera = Camera.main;
 
-        if (backgroundSpriteRenderer == null || textMeshPro == null)
+        if (backgroundSpriteRenderer == null)
         {
-            Debug.LogError("ChatBubble: Missing components.");
+            Debug.LogError("ChatBubble: background missing reference");
+        }
+
+        if (textMeshPro == null)
+        {
+            Debug.LogError("ChatBubble: textMeshPro missing reference");
         }
 
         if (iconSpriteRenderer == null && useIcon)
         {
-            Debug.LogWarning("ChatBubble: Icon usage is enabled, but no Icon object is found.");
+            Debug.LogWarning("ChatBubble: icon sprite missing reference");
         }
     }
 
@@ -102,7 +102,7 @@ public class ChatBubble : MonoBehaviour
                 iconSpriteRenderer.transform.localPosition = new Vector3(iconSpriteRenderer.transform.localPosition.x + -0.01f, iconSpriteRenderer.transform.localPosition.y, 0.02f);
                 iconSpriteRenderer.sprite = GetIconSprite(iconType);
             }
-        
+
         }
 
         if (textMeshPro != null && !useIcon)
