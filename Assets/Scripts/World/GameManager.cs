@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Manages Player interactions with Mini Games within Worlds
+/// and ... (e.g., saving)
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     public enum LocationType

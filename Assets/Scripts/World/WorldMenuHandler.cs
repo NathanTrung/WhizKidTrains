@@ -4,6 +4,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using WhizKid.Player;
 
+/// <summary>
+/// Specific to World UI
+/// Responsible for displaying UI related events 
+/// to the players
+/// </summary>
 public class WorldMenuHandler : MonoBehaviour
 {
     #region Serialized Private Fields
