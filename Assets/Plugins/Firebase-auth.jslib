@@ -25,7 +25,6 @@ mergeInto(LibraryManager.library, {
     SignInWithEmailAndPassword: function (email, password) {
         var parsedEmail = UTF8ToString(email);
         var parsedPassword = UTF8ToString(password);
-        alert("SignInWithEmailAndPassword Called");
 
         try {
             firebase.auth().signInWithEmailAndPassword(parsedEmail, parsedPassword)
