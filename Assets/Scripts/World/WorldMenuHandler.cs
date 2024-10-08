@@ -32,8 +32,18 @@ public class WorldMenuHandler : MonoBehaviour
 
     #region Introduction Methods
 
-    public void EnableIntro() => introPanel.SetActive(true);
-    public void DisableIntro() => introPanel.SetActive(false);
+    public void EnableIntro()
+    {
+        introPanel.SetActive(true);
+        Cursor.lockState = CursorLockMode.Confined;
+        Time.timeScale = 0f;
+    }
+    public void DisableIntro()
+    {
+        introPanel.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1f;
+    }
     public bool IsIntroActive() => introPanel.activeSelf;
 
     #endregion
@@ -44,6 +54,8 @@ public class WorldMenuHandler : MonoBehaviour
         pauseMenuPanel.SetActive(true);
         gameDashboardPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public void Unpause()
@@ -51,11 +63,13 @@ public class WorldMenuHandler : MonoBehaviour
         pauseMenuPanel.SetActive(false);
         gameDashboardPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
 
         // playerinstance present in both world manager 
         // require code redesign
 
-        playerInstance.enabled = true; 
+        playerInstance.enabled = true;
         WorldManager.isPaused = false;
     }
 

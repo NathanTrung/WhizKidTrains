@@ -17,8 +17,6 @@ public class WorldManager : MonoBehaviour
     {
         isPaused = false;
         menuHandler.EnableIntro();
-        Cursor.lockState = CursorLockMode.Confined;
-        Time.timeScale = 0f;
         playerInstance.enabled = false;
         PlayerInstance = playerInstance;
     }
@@ -42,9 +40,7 @@ public class WorldManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
             {
                 menuHandler.DisableIntro();
-                Cursor.lockState = CursorLockMode.Locked;
                 playerInstance.enabled = true;
-                Time.timeScale = 1f;
             }
             return;
         }
@@ -57,16 +53,12 @@ public class WorldManager : MonoBehaviour
                 menuHandler.Unpause();
                 isPaused = false;
                 playerInstance.enabled = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Time.timeScale = 1f;
             }
             else
             {
                 menuHandler.Pause();
                 isPaused = true;
                 playerInstance.enabled = false;
-                Cursor.lockState = CursorLockMode.Confined;
-                Time.timeScale = 0f;
             }
         }
     }
