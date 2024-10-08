@@ -1,4 +1,3 @@
-using Autodesk.Fbx;
 using UnityEngine;
 
 public class PlayerRideController : MonoBehaviour

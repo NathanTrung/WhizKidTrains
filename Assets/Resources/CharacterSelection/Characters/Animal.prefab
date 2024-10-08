@@ -158,7 +158,7 @@ MonoBehaviour:
   m_BindingMode: 5
   m_FollowOffset: {x: 0, y: 0.5, z: -1.5}
   m_XDamping: 1
-  m_YDamping: 1
+  m_YDamping: 2
   m_ZDamping: 1
   m_AngularDampingMode: 0
   m_PitchDamping: 0
@@ -316,7 +316,7 @@ MonoBehaviour:
   m_BindingMode: 5
   m_FollowOffset: {x: 0, y: 0.5, z: -1.5}
   m_XDamping: 1
-  m_YDamping: 1
+  m_YDamping: 2
   m_ZDamping: 1
   m_AngularDampingMode: 0
   m_PitchDamping: 0
@@ -584,13 +584,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1943703357083473295}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13579099, y: -0.5235817, z: 0.08496559, w: 0.8367819}
+  m_LocalRotation: {x: 0.07729596, y: -0.5282213, z: 0.048364732, w: 0.844197}
   m_LocalPosition: {x: 1.3489838, y: 1.3000001, z: -0.65592957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6998004466480166297}
-  m_LocalEulerAnglesHint: {x: 7.89, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 9.962, y: -46.083, z: 3.215}
 --- !u!20 &1368560225259907800
 Camera:
   m_ObjectHideFlags: 0
@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowDebugText: 1
+  m_ShowDebugText: 0
   m_ShowCameraFrustum: 0
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
@@ -1211,7 +1211,7 @@ MonoBehaviour:
   m_BindingMode: 5
   m_FollowOffset: {x: 0, y: 0.5, z: -1.5}
   m_XDamping: 1
-  m_YDamping: 1
+  m_YDamping: 2
   m_ZDamping: 1
   m_AngularDampingMode: 0
   m_PitchDamping: 0
@@ -1746,9 +1746,9 @@ MonoBehaviour:
   pauseMenu: {fileID: 0}
   m_animator: {fileID: 2765678081442427926}
   m_rigidBody: {fileID: 1598341012708006347}
+  currentState: 0
   playerCamera: {fileID: 1368560225259907800}
-  cinemachineTransform: {fileID: 2695900425508142783}
-  usingCinemachine: 1
+  usingCinemachine: 0
   m_moveSpeed: 2
   m_turnSpeed: 200
   m_jumpForce: 0.35
@@ -2103,7 +2103,7 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_YAxis:
-    Value: 1
+    Value: 0
     m_SpeedMode: 0
     m_MaxSpeed: 2
     m_AccelTime: 0.2
@@ -2155,7 +2155,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_BindingMode: 5
-  m_SplineCurvature: 0.2
+  m_SplineCurvature: 0.502
   m_Orbits:
   - m_Height: 0.5
     m_Radius: 1.5
