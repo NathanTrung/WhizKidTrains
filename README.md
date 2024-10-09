@@ -12,15 +12,15 @@ WhizKidTrains serves as a hub for future mini-games, with the platform ready to 
 
 **Features**
 
-    One Mini-Game Available: Currently, WhizKidTrains offers a single mini-game that introduces children to rail transportation concepts through engaging and accessible gameplay. This game allows players to explore the basics of train operations in a way that’s easy to understand and fun to interact with.
+One Mini-Game Available: Currently, WhizKidTrains offers a single mini-game that introduces children to rail transportation concepts through engaging and accessible gameplay. This game allows players to explore the basics of train operations in a way that’s easy to understand and fun to interact with.
 
-    Hub for Future Mini-Games: The platform is designed to serve as a hub, ready to incorporate additional mini-games as they become available. Each future game will build on the foundation of interactive learning, helping children expand their knowledge of logistics and transportation in a safe and structured environment.
+Hub for Future Mini-Games: The platform is designed to serve as a hub, ready to incorporate additional mini-games as they become available. Each future game will build on the foundation of interactive learning, helping children expand their knowledge of logistics and transportation in a safe and structured environment.
 
-    Sensory-Friendly Design: WhizKidTrains is tailored for autistic children, offering a calm and intuitive interface that minimizes distractions and supports a focused learning experience.
+Sensory-Friendly Design: WhizKidTrains is tailored for autistic children, offering a calm and intuitive interface that minimizes distractions and supports a focused learning experience.
 
-    Interactive Learning: The game promotes active engagement by allowing players to control elements of gameplay, encouraging problem-solving, decision-making, and hands-on learning.
+Interactive Learning: The game promotes active engagement by allowing players to control elements of gameplay, encouraging problem-solving, decision-making, and hands-on learning.
 
-    Educational Content: Through fun activities, children learn real-world concepts about how trains work, the roles they play in logistics, and the basics of transportation systems.
+Educational Content: Through fun activities, children learn real-world concepts about how trains work, the roles they play in logistics, and the basics of transportation systems.
     
 **Deployment Guide**
 
@@ -213,6 +213,7 @@ Experience WhizKidTrains firsthand by visiting the live prototype:
 🔗 WhizKidTrains Prototype
 
 **Client Guide**
+
 Accessing WhizKidTrains
 
 Web Application: Access the application directly through your web browser at WhizKidTrains Prototype.
