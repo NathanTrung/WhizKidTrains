@@ -189,7 +189,7 @@ Include documentation for new features or changes.
 
 Experience WhizKidTrains firsthand by visiting the live prototype:
 
-🔗 WhizKidTrains Prototype
+🔗 [WhizKidTrains Prototype](https://whizkidtrains-proto.web.app/)
 
 
 **Client Guide**
