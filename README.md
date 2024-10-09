@@ -40,19 +40,13 @@ Installation
 
 Clone the Repository
 
-bash
-
     git clone https://github.com/NathanTrung/WhizKidTrains.git
 
 Navigate to the Project Directory
 
-bash
-
     cd WhizKidTrains
 
 Install Dependencies
-
-bash
 
     npm install
 
@@ -69,32 +63,32 @@ env
     REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
     REACT_APP_FIREBASE_APP_ID=your_firebase_app_id
 
-    Note: Replace the placeholder values with your actual Firebase project credentials.
+Note: Replace the placeholder values with your actual Firebase project credentials.
 
 Project Structure
 
-graphql
+    graphql
 
-WhizKidTrains/
-│
-├── public/                 # Public assets
-│   ├── index.html          # Main HTML file
-│   └── assets/             # Images, icons, etc.
-│
-├── src/                    # Source code
-│   ├── components/         # Reusable React components
-│   ├── pages/              # Page components (e.g., Home, Games, Profile)
-│   ├── services/           # Firebase and API services
-│   ├── styles/             # CSS/SASS files
-│   ├── utils/              # Utility functions
-│   ├── App.js              # Main App component
-│   ├── index.js            # Entry point
-│   └── routes/             # Route definitions
-│
-├── .gitignore              # Git ignore rules
-├── package.json            # Project metadata and dependencies
-├── README.md               # This file
-└── firebase.json           # Firebase configuration
+    WhizKidTrains/
+    │
+    ├── public/                 # Public assets
+    │   ├── index.html          # Main HTML file
+    │   └── assets/             # Images, icons, etc.
+    │
+    ├── src/                    # Source code
+    │   ├── components/         # Reusable React components
+    │   ├── pages/              # Page components (e.g., Home, Games, Profile)
+    │   ├── services/           # Firebase and API services
+    │   ├── styles/             # CSS/SASS files
+    │   ├── utils/              # Utility functions
+    │   ├── App.js              # Main App component
+    │   ├── index.js            # Entry point
+    │   └── routes/             # Route definitions
+    │
+    ├── .gitignore              # Git ignore rules
+    ├── package.json            # Project metadata and dependencies
+    ├── README.md               # This file
+    └── firebase.json           # Firebase configuration
 
 Technologies Used
 
@@ -111,8 +105,6 @@ Running Locally
 
 Start the Development Server
 
-bash
-
     npm start
 
 Access the Application
@@ -123,8 +115,6 @@ Building for Production
 
 Create an Optimized Build
 
-bash
-
     npm run build
 
 This will generate a build/ directory with optimized production-ready files.
@@ -133,17 +123,13 @@ Deploy to Firebase
 
 Ensure you have Firebase CLI installed and configured.
 
-bash
-
     firebase deploy
 
-    Note: This command deploys both the frontend and backend (if applicable) based on your firebase.json configuration.
+Note: This command deploys both the frontend and backend (if applicable) based on your firebase.json configuration.
 
 Testing
 
 Run the test suite using:
-
-bash
 
     npm test
 
@@ -154,19 +140,16 @@ WhizKidTrains is deployed using Firebase Hosting. To deploy updates:
 
 Login to Firebase
 
-bash
-
     firebase login
 
 Deploy the Application
 
-bash
-
     firebase deploy
 
-    This will upload your latest build to Firebase Hosting.
+Note: This will upload your latest build to Firebase Hosting.
 
-Contributing
+
+**Contributing**
 
 We welcome contributions from the community! To contribute:
 
@@ -176,25 +159,17 @@ Click the "Fork" button at the top-right corner of the repository page.
 
 Clone Your Fork
 
-bash
-
     git clone https://github.com/your-username/WhizKidTrains.git
 
 Create a Feature Branch
-
-bash
 
     git checkout -b feature/your-feature-name
 
 Commit Your Changes
 
-bash
-
     git commit -m "Add feature: your feature description"
 
 Push to Your Fork
-
-bash
 
     git push origin feature/your-feature-name
 
