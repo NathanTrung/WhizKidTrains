@@ -1,4 +1,5 @@
 **WhizKidTrains**
+
 WhizKidTrains is an educational web application specifically designed for autistic children, offering a welcoming and structured environment where they can engage in interactive learning. Acting as a central hub, the platform connects several mini-games that teach essential concepts in rail transportation and logistics, all tailored to the needs of neurodiverse learners.
 
 Developed by Team i20 for Dr. James George Marshall, WhizKidTrains combines sensory-friendly gameplay and educational content to provide an enriching and engaging experience that helps children develop cognitive and problem-solving skills in a fun and interactive way.
@@ -27,31 +28,30 @@ Welcome to the WhizKidTrains developer documentation! This guide will help you s
 Prerequisites
 
 Before you begin, ensure you have the following installed on your machine:
-
-    Node.js: Version 16.x or above
-    npm: Comes bundled with Node.js
-    Git: For version control
-    Firebase CLI: For deployment and backend services
+Node.js: Version 16.x or above
+npm: Comes bundled with Node.js
+Git: For version control
+Firebase CLI: For deployment and backend services
 
 Installation
 
-    Clone the Repository
+Clone the Repository
 
-    bash
+bash
 
-git clone https://github.com/NathanTrung/WhizKidTrains.git
+    git clone https://github.com/NathanTrung/WhizKidTrains.git
 
 Navigate to the Project Directory
 
 bash
 
-cd WhizKidTrains
+    cd WhizKidTrains
 
 Install Dependencies
 
 bash
 
-npm install
+    npm install
 
 Set Up Environment Variables
 
@@ -66,7 +66,7 @@ env
     REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
     REACT_APP_FIREBASE_APP_ID=your_firebase_app_id
 
-        Note: Replace the placeholder values with your actual Firebase project credentials.
+    Note: Replace the placeholder values with your actual Firebase project credentials.
 
 Project Structure
 
@@ -95,34 +95,34 @@ WhizKidTrains/
 
 Technologies Used
 
-    React: Front-end library for building user interfaces.
-    Firebase: Backend services including authentication, Firestore database, and hosting.
-    React Router: For client-side routing.
-    Redux: State management (if applicable).
-    SASS/SCSS: Enhanced CSS for styling.
-    Jest & React Testing Library: For unit and integration testing.
-    ESLint & Prettier: Code linting and formatting.
-    GitHub Actions: Continuous Integration and Deployment (CI/CD) workflows.
+React: Front-end library for building user interfaces.
+Firebase: Backend services including authentication, Firestore database, and hosting.
+React Router: For client-side routing.
+Redux: State management (if applicable).
+SASS/SCSS: Enhanced CSS for styling.
+Jest & React Testing Library: For unit and integration testing.
+ESLint & Prettier: Code linting and formatting.
+GitHub Actions: Continuous Integration and Deployment (CI/CD) workflows.
 
 Running Locally
 
-    Start the Development Server
+Start the Development Server
 
-    bash
+bash
 
     npm start
 
-    Access the Application
+Access the Application
 
-    Open your browser and navigate to http://localhost:3000.
+Open your browser and navigate to http://localhost:3000.
 
 Building for Production
 
-    Create an Optimized Build
+Create an Optimized Build
 
-    bash
+bash
 
-npm run build
+    npm run build
 
 This will generate a build/ directory with optimized production-ready files.
 
@@ -134,7 +134,7 @@ bash
 
     firebase deploy
 
-        Note: This command deploys both the frontend and backend (if applicable) based on your firebase.json configuration.
+    Note: This command deploys both the frontend and backend (if applicable) based on your firebase.json configuration.
 
 Testing
 
@@ -142,18 +142,18 @@ Run the test suite using:
 
 bash
 
-npm test
+    npm test
 
 This will execute all tests using Jest and React Testing Library.
 Deployment
 
 WhizKidTrains is deployed using Firebase Hosting. To deploy updates:
 
-    Login to Firebase
+Login to Firebase
 
-    bash
+bash
 
-firebase login
+    firebase login
 
 Deploy the Application
 
@@ -167,27 +167,27 @@ Contributing
 
 We welcome contributions from the community! To contribute:
 
-    Fork the Repository
+Fork the Repository
 
-    Click the "Fork" button at the top-right corner of the repository page.
+Click the "Fork" button at the top-right corner of the repository page.
 
-    Clone Your Fork
+Clone Your Fork
 
-    bash
+bash
 
-git clone https://github.com/your-username/WhizKidTrains.git
+    git clone https://github.com/your-username/WhizKidTrains.git
 
 Create a Feature Branch
 
 bash
 
-git checkout -b feature/your-feature-name
+    git checkout -b feature/your-feature-name
 
 Commit Your Changes
 
 bash
 
-git commit -m "Add feature: your feature description"
+    git commit -m "Add feature: your feature description"
 
 Push to Your Fork
 
@@ -195,16 +195,16 @@ bash
 
     git push origin feature/your-feature-name
 
-    Open a Pull Request
+Open a Pull Request
 
-    Navigate to the original repository and open a pull request from your fork.
+Navigate to the original repository and open a pull request from your fork.
 
-    Guidelines:
+Guidelines:
 
-        Follow the existing code style and structure.
-        Ensure all tests pass before submitting.
-        Provide clear and descriptive commit messages.
-        Include documentation for new features or changes.
+Follow the existing code style and structure.
+Ensure all tests pass before submitting.
+Provide clear and descriptive commit messages.
+Include documentation for new features or changes.
         
 **Live Demo**
 
@@ -215,36 +215,26 @@ Experience WhizKidTrains firsthand by visiting the live prototype:
 **Client Guide**
 Accessing WhizKidTrains
 
-    Web Application: Access the application directly through your web browser at WhizKidTrains Prototype.
-    Supported Browsers: Compatible with the latest versions of Chrome, Firefox, Safari, and Edge.
-    Devices: Optimized for both desktop and mobile devices to ensure a seamless experience.
+Web Application: Access the application directly through your web browser at WhizKidTrains Prototype.
+Supported Browsers: Compatible with the latest versions of Chrome, Firefox, Safari, and Edge.
+Devices: Optimized for both desktop and mobile devices to ensure a seamless experience.
 
 Using the Application
 
-    Sign Up / Log In:
-        New users can create an account using their email or via social logins (Google, Facebook).
-        Returning users can log in with their credentials.
+Sign Up / Log In:
+    New users can create an account using their email or via social logins (Google, Facebook).
+    Returning users can log in with their credentials.
 
-    Dashboard:
-        After logging in, you'll land on the dashboard where you can choose between different games and educational modules.
+Dashboard:
+    After logging in, you'll land on the dashboard where you can choose between different games and educational modules.
 
-    Games:
-        Train Builder: Drag and drop different carriages to build your train. Learn about the functions of each part.
-        Station Manager: Simulate managing a train station by scheduling trains, handling cargo, and ensuring timely arrivals and departures.
-
-    Educational Modules:
-        Select topics like "How Trains Work," "Railway Safety," and "Logistics Management" to watch animated lessons and read interactive content.
-
-    Quizzes and Assessments:
-        After completing modules, take quizzes to test your understanding and earn badges.
-
-    Progress Tracking:
-        View your progress, achievements, and areas for improvement in the profile section.
+Games:
+        Train Rider: Ride train to different stations that house different mini-games.
+        Game Manager: Select from available mini-games.
 
 Support
 
 If you encounter any issues or have questions, please reach out to our support team:
 
-    Email: support@whizkidtrains.com
-    GitHub Issues: Open an Issue
-    Contact Form: Available on the Contact Page
+Email: nathantrung5@gmail.com
+GitHub Issues: Open an Issue
