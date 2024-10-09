@@ -4,11 +4,13 @@ WhizKidTrains is an educational web application specifically designed for autist
 
 Developed by Team i20 for Dr. James George Marshall, WhizKidTrains combines sensory-friendly gameplay and educational content to provide an enriching and engaging experience that helps children develop cognitive and problem-solving skills in a fun and interactive way.
 
+
 **Overview**
 
 WhizKidTrains is an educational platform designed specifically for autistic children, providing an interactive and structured learning environment. Currently, the game features one mini-game that introduces children to the fundamentals of rail transportation and logistics through fun, sensory-friendly gameplay.
 
 WhizKidTrains serves as a hub for future mini-games, with the platform ready to expand as more games are added. Each game will be tailored to accommodate neurodiverse learning styles, with accessible designs, clear guidance, and progressive difficulty to support learning and engagement.
+
 
 **Features**
 
@@ -21,6 +23,7 @@ Sensory-Friendly Design: WhizKidTrains is tailored for autistic children, offeri
 Interactive Learning: The game promotes active engagement by allowing players to control elements of gameplay, encouraging problem-solving, decision-making, and hands-on learning.
 
 Educational Content: Through fun activities, children learn real-world concepts about how trains work, the roles they play in logistics, and the basics of transportation systems.
+
     
 **Deployment Guide**
 
@@ -205,12 +208,14 @@ Follow the existing code style and structure.
 Ensure all tests pass before submitting.
 Provide clear and descriptive commit messages.
 Include documentation for new features or changes.
+
         
 **Live Demo**
 
 Experience WhizKidTrains firsthand by visiting the live prototype:
 
 🔗 WhizKidTrains Prototype
+
 
 **Client Guide**
 
