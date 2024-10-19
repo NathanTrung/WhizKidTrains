@@ -59,27 +59,26 @@ public class EmotionPicker : MonoBehaviour
     {
         if (teleportLocation != null)
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                Debug.Log("Teleporting Player to location");
-                CharacterController playerController = player.GetComponent<CharacterController>();
-                if (playerController != null)
-                {
-                    playerController.enabled = false; // Disable controller before teleporting
-                    player.transform.position = teleportLocation.position; // Set position
-                    playerController.enabled = true; // Re-enable controller after teleporting
-                }
-                else
-                {
-                    player.transform.position = teleportLocation.position; // Fallback to direct transform movement
-                }
-                HideEmotionPanel(); // Hide the panel after teleporting
-            }
+            Debug.LogError("EmotionPicker SelectEmotion(): Teleport Location missing reference");
+            return;
         }
-        else
+        
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            Debug.LogError("Teleport location is not assigned.");
+            Debug.Log("Teleporting Player to location");
+            CharacterController playerController = player.GetComponent<CharacterController>();
+            if (playerController != null)
+            {
+                playerController.enabled = false; // Disable controller before teleporting
+                player.transform.position = teleportLocation.position; // Set position
+                playerController.enabled = true; // Re-enable controller after teleporting
+            }
+            else
+            {
+                player.transform.position = teleportLocation.position; // Fallback to direct transform movement
+            }
+            HideEmotionPanel(); // Hide the panel after teleporting
         }
     }
 
