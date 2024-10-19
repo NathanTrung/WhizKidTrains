@@ -1,4 +1,6 @@
+#define SINGLE_PLAYER
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -19,11 +21,17 @@ public class MainMenu : MonoBehaviour
     }
     public void PlayGame()
     {
+#if !SINGLE_PLAYER
+        // Use login & register features
+        // to allow for multiplayer
         mainPanel.SetActive(false);
         loginRegisterPanel.SetActive(true);
         loginPanel.SetActive(false);
         registerPanel.SetActive(false);
         settingsPanel.SetActive(false);
+#else
+        SceneManager.LoadScene("World");
+#endif
     }
 
     public void OpenSettings()
