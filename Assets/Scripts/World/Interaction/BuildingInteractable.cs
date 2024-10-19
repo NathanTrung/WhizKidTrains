@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,11 +9,14 @@ public class BuildingInteractable : MonoBehaviour
     public void Interact()
     {
         Debug.Log("Interacting with building...");
-        LoadScene();
+        StartCoroutine(LoadScene());
     }
 
-    private void LoadScene()
+    IEnumerator LoadScene()
     {
-        SceneManager.LoadScene(sceneToLoad);
+        SceneManager.LoadScene(sceneToLoad, LoadSceneMode.Additive);
+        yield return null; // REQUIRED: yield a frame to wait for next scene to load
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneToLoad));
+        SceneManager.UnloadSceneAsync("World");
     }
 }
