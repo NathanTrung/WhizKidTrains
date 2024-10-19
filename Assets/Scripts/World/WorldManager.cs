@@ -31,6 +31,7 @@ public class WorldManager : MonoBehaviour
             Debug.LogError("WorldManger Update(): Missing objects");
             return;
         }
+
         HandleInput();
     }
 
@@ -40,7 +41,7 @@ public class WorldManager : MonoBehaviour
         if (menuHandler.IsIntroActive())
         {
             Debug.Log("WorldManager HandleInput(): Intro Panel is still active");
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
             {
                 menuHandler.DisableIntro();
                 playerInstance.enabled = true;
