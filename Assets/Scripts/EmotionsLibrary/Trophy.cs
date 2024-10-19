@@ -8,62 +8,50 @@
 using System;
 using UnityEngine;
 
-namespace WhizKid.EmotionsLibrary
-{
-    [Serializable]
-    [RequireComponent(typeof(Texture2D))]
-    public class Trophy
-    {
-        #region Public Fields
-
-        [Header("UI")]
-        public GameObject bookTrophySprite;
-        public GameObject achievementPage;
+[Serializable]
+[RequireComponent(typeof(Texture2D))]
+public class Trophy {
+    //! Variables
+    //? public
+    [Header("UI")]
+    public GameObject bookTrophySprite;
+    public GameObject achievementPage;
 
 
-        [Header("Textures & Sprites")]
-        public Texture2D lockedTexture;     //* set in inspector
-        public Texture2D unlockedTexture;   //* set in inspector
+    [Header("Textures & Sprites")]
+    public Texture2D lockedTexture;     //* set in inspector
+    public Texture2D unlockedTexture;   //* set in inspector
+    
+    [HideInInspector]public Sprite lockedSprite;
+    [HideInInspector]public Sprite unlockedSprite;
+    
+    //? Private
+    [Header("Core Data")]
+    [SerializeField] private int _id;
+    [SerializeField] private string _name;    
 
-        [HideInInspector] public Sprite lockedSprite;
-        [HideInInspector] public Sprite unlockedSprite;
+    [SerializeField] private bool _achieved;
 
-        #endregion  
-        #region Serialized Private Fields
 
-        //? Private
-        [Header("Core Data")]
-        [SerializeField] private int _id;
-        [SerializeField] private string _name;
+    //! Properties
+    public int ID { get { return _id; } }
+    public string Name { get { return _name; } }
+    public bool Achieved { get { return _achieved; } set { _achieved = value; } }
 
-        [SerializeField] private bool _achieved;
 
-        #endregion
-        #region Properties
+    //! Methods
+    //? public
+    public void InitTrophy(){
+        if(!lockedTexture || !unlockedTexture) {
+            Debug.Log($"Achievement {_id} textures not set");
+            return; }
 
-        public int ID { get { return _id; } }
-        public string Name { get { return _name; } }
-        public bool Achieved { get { return _achieved; } set { _achieved = value; } }
-
-        #endregion
+        lockedSprite = Sprite.Create(
+                lockedTexture,
+                new Rect(0.0f, 0.0f, lockedTexture.width, lockedTexture.height),
+                new Vector2(0.5f, 0.5f), 100.0f); 
         
-        public void InitTrophy()
-        {
-            if (!lockedTexture || !unlockedTexture)
-            {
-                Debug.Log($"Achievement {_id} textures not set");
-                return;
-            }
-
-            lockedSprite = Sprite.Create(
-                    lockedTexture,
-                    new Rect(0.0f, 0.0f, lockedTexture.width, lockedTexture.height),
-                    new Vector2(0.5f, 0.5f), 100.0f);
-
-            unlockedSprite = Sprite.Create(
-                unlockedTexture,
-                new Rect(0.0f, 0.0f, unlockedTexture.width, unlockedTexture.height),
-                new Vector2(0.5f, 0.5f), 100.0f);
-        }
-    }
-}
+        unlockedSprite = Sprite.Create(
+            unlockedTexture,
+            new Rect(0.0f, 0.0f, unlockedTexture.width, unlockedTexture.height),
+            new Vector2(0.5f, 0.5f), 100.0f); } } 

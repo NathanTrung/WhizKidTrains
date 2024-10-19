@@ -6,9 +6,11 @@ public class EmotionPicker : MonoBehaviour
     public GameObject emotionPanel; // Reference to the EmotionPanel
     public VideoSelector videoSelector; // Reference to the VideoSelector script
 
+    private bool isPanelVisible = false; // Track the panel's visibility state
+
     private void Start()
     {
-        emotionPanel.SetActive(false); // Ensure the panel is hidden initially
+        HideEmotionPanel(); // Ensure the panel is hidden initially
 
         // Ensure videoSelector is assigned
         if (videoSelector == null)
@@ -26,14 +28,10 @@ public class EmotionPicker : MonoBehaviour
             return; // Prevent further execution
         }
 
-        // Only allow activation if the video is not playing
-        if (!videoSelector.videoPlayer.isPlaying)
+        // Ensure the panel is hidden if the video is playing
+        if (videoSelector.videoPlayer.isPlaying && isPanelVisible)
         {
-            // Panel activation is handled in OnTriggerEnter
-        }
-        else
-        {
-            emotionPanel.SetActive(false); // Ensure the panel remains hidden while the video is playing
+            HideEmotionPanel(); // Hide the panel if the video starts playing
         }
     }
 
@@ -41,10 +39,10 @@ public class EmotionPicker : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Only show the panel if the video has ended
-            if (videoSelector != null && videoSelector.videoPlayer != null && !videoSelector.videoPlayer.isPlaying)
+            // Only show the panel if the video is not playing
+            if (videoSelector != null && !videoSelector.videoPlayer.isPlaying)
             {
-                emotionPanel.SetActive(true); // Show the panel when the player enters the trigger area
+                ShowEmotionPanel();
             }
         }
     }
@@ -53,36 +51,53 @@ public class EmotionPicker : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            emotionPanel.SetActive(false); // Hide the panel when the player leaves the trigger area
+            HideEmotionPanel(); // Hide the panel when the player exits the trigger area
         }
     }
 
     public void SelectEmotion(int segmentIndex)
     {
-        if (teleportLocation == null)
+        if (teleportLocation != null)
         {
-            Debug.LogError("EmotionPicker SelectEmotion(): Teleport location is not assigned.");
-            return;
-        }
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
-        {
-            Debug.LogError("EmotionPicker SelectEmotion(): PLayer reference missing");
-            return;
-        }
-        
-        Debug.Log("EmotionPicker SelectMotion(): Teleporting Player to location");
-        CharacterController playerController = player.GetComponent<CharacterController>();
-        if (playerController != null)
-        {
-            playerController.enabled = false; // Disable controller before teleporting
-            player.transform.position = teleportLocation.position; // Set position
-            playerController.enabled = true; // Re-enable controller after teleporting
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                Debug.Log("Teleporting Player to location");
+                CharacterController playerController = player.GetComponent<CharacterController>();
+                if (playerController != null)
+                {
+                    playerController.enabled = false; // Disable controller before teleporting
+                    player.transform.position = teleportLocation.position; // Set position
+                    playerController.enabled = true; // Re-enable controller after teleporting
+                }
+                else
+                {
+                    player.transform.position = teleportLocation.position; // Fallback to direct transform movement
+                }
+                HideEmotionPanel(); // Hide the panel after teleporting
+            }
         }
         else
         {
-            player.transform.position = teleportLocation.position; // Fallback to direct transform movement
+            Debug.LogError("Teleport location is not assigned.");
         }
-        emotionPanel.SetActive(false); // Hide the panel after teleporting
+    }
+
+    private void ShowEmotionPanel()
+    {
+        if (emotionPanel != null)
+        {
+            emotionPanel.SetActive(true); // Show the panel
+            isPanelVisible = true; // Track visibility state
+        }
+    }
+
+    private void HideEmotionPanel()
+    {
+        if (emotionPanel != null)
+        {
+            emotionPanel.SetActive(false); // Hide the panel
+            isPanelVisible = false; // Track visibility state
+        }
     }
 }
