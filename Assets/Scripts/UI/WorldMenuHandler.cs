@@ -1,4 +1,4 @@
-using Photon.Pun.UtilityScripts;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,24 +17,24 @@ public class WorldMenuHandler : MonoBehaviour
     [Header("Menu Panels")]
     [SerializeField] private GameObject introPanel;
     [SerializeField] private GameObject pauseMenuPanel;
-    [SerializeField] private GameObject gameDashboardPanel;
     [SerializeField] private GameObject settingsMenuPanel;
+    [SerializeField] private GameObject gameDashboardPanel;
 
     [Header("Settings")]
     [SerializeField] private Slider volumeSlider;
     [SerializeField] private Dropdown qualityDropdown;
-    #endregion
 
-    private float playerTimeScale = 1.0f;
+    #endregion
 
     private void Start()
     {
-        pauseMenuPanel.SetActive(false);
-        settingsMenuPanel.SetActive(false);
-        gameDashboardPanel.SetActive(false);
         volumeSlider.onValueChanged.AddListener(SetVolume);
         qualityDropdown.onValueChanged.AddListener(SetQuality);
         qualityDropdown.value = QualitySettings.GetQualityLevel();
+
+        pauseMenuPanel.SetActive(false);
+        settingsMenuPanel.SetActive(false);
+        gameDashboardPanel.SetActive(false);
     }
 
     #region Introduction Methods
@@ -59,33 +59,32 @@ public class WorldMenuHandler : MonoBehaviour
     public void Pause()
     {
         pauseMenuPanel.SetActive(true);
-        gameDashboardPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
+        gameDashboardPanel.SetActive(false);
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.Confined;
     }
 
     public void Unpause()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         pauseMenuPanel.SetActive(false);
-        gameDashboardPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
+        gameDashboardPanel.SetActive(false);
         Time.timeScale = 1f;
 
-        // playerinstance present in both world manager 
+        // playerInstance present in both world manager 
         // require code redesign
 
         playerInstance.enabled = true;
         WorldManager.isPaused = false;
-        
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void GameDashboard()
     {
         pauseMenuPanel.SetActive(false);
-        gameDashboardPanel.SetActive(true);
         settingsMenuPanel.SetActive(false);
+        gameDashboardPanel.SetActive(true);
     }
 
     #endregion

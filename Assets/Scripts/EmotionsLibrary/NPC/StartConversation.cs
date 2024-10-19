@@ -1,21 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DialogueEditor;
+using EmotionsLibrary.Player;
 
 public class StartConversation : MonoBehaviour
 {
     public NPCConversation myConversation;
+    public Player player;
 
-    /*
-    private void OnMouseOver()
+    void Start()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            ConversationManager.Instance.StartConversation(myConversation);
-        }
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
-    */
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,15 +20,27 @@ public class StartConversation : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        
+        ConversationManager.OnConversationStarted += HandleConversationStart;
+        ConversationManager.OnConversationEnded += HandleConversationEnd;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDisable()
     {
-        
+        ConversationManager.OnConversationStarted -= HandleConversationStart;
+        ConversationManager.OnConversationEnded -= HandleConversationEnd;
+    }
+
+    private void HandleConversationEnd()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        player.enabled = true;
+    }
+
+    private void HandleConversationStart()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        player.enabled = false;
     }
 }

@@ -20,7 +20,6 @@ public class StartConversationCinemaNPC : MonoBehaviour
         }
     }
 
-    // Method to start the NPC conversation based on the current video
     private void StartConversationBasedOnVideo()
     {
         int currentVideoIndex = videoSelector.currentVideoIndex;
