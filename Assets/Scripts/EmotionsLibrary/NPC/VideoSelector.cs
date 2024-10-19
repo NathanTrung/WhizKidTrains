@@ -19,13 +19,19 @@ public class VideoSelector : MonoBehaviour
         }
     }
 
-    // Method to play the selected video
     public void PlayVideo()
     {
+
+        string[] videoPaths = {
+            System.IO.Path.Combine(Application.streamingAssetsPath, "Video", "Chaotic Stressed Clip.mp4"),
+            System.IO.Path.Combine(Application.streamingAssetsPath, "Video", "CharlieSceneAngry - Trim.mp4"),
+            System.IO.Path.Combine(Application.streamingAssetsPath, "Video", "excited.mp4"),
+        };
         if (currentVideoIndex >= 0 && currentVideoIndex < videoPaths.Length)
         {
             //videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, videoPaths[currentVideoIndex]);
-            videoPlayer.clip = videoPaths[currentVideoIndex];
+            // videoPlayer.clip = videoPaths[currentVideoIndex];
+            videoPlayer.url = videoPaths[currentVideoIndex];
             videoPlayer.Play();
             Debug.Log("Playing video: " + videoPaths[currentVideoIndex]);
         }
