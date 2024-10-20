@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using EmotionsLibrary.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -82,6 +83,19 @@ public class EmotionsMenuHandler : MonoBehaviour
 
     public void MainMenu()
     {
-        SceneManager.LoadScene("Main Menu");
+        StartCoroutine(LoadScene("Main Menu"));
+    }
+
+    public void World()
+    {
+        StartCoroutine(LoadScene("World"));
+    }
+
+    public IEnumerator LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+        yield return null; // REQUIRED: yield a frame to wait for next scene to load
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
+        SceneManager.UnloadSceneAsync("EmotionsLibrary");
     }
 }
